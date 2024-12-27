@@ -1,0 +1,50 @@
+/* Add any custom styles here */
+.btn-icon {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+}
+.table {
+    color: #ffffff;
+}
+.table thead {
+    background-color: #333333;
+}
+.table tbody tr:hover {
+    background-color: #444444;
+}
+.modal-content {
+    background-color: #333333;
+    color: #ffffff;
+}
+.modal-header {
+    border-bottom: 1px solid #444444;
+}
+.modal-footer {
+    border-top: 1px solid #444444;
+}
+.dropdown-menu {
+    max-height: 200px;
+    overflow-y: auto;
+}

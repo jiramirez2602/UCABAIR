@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UcabAir</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">UcabAir ✈</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav" id="menu">
+                    <!-- Menu items will be dynamically added here -->
+                </ul>
+            </div>
+            <button id="logoutBtn" class="btn btn-outline-danger">Salir</button>
+        </div>
+    </nav>
+
+    <header class="bg-primary text-light text-center py-5">
+        <div class="container">
+            <h1 class="display-4">Bienvenido a UcabAir</h1>
+            <p class="lead">Liderando la industria en fabricación y venta de aviones en Venezuela.</p> 
+        </div>
+    </header>
+    <div class="container mt-5" id="productos">
+        <h2 class="mb-4">Nuestros Productos</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mb-4"> <img src="../../resources/avion_pasajeros.jpg" class="card-img-top"
+                        alt="Avión de pasajeros">
+                    <div class="card-body">
+                        <h5 class="card-title">Avión de Pasajeros</h5>
+                        <p class="card-text">Nuestro modelo más avanzado para viajes comerciales.</p> 
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4"> <img src="../../resources/avion_privado.jpeg" class="card-img-top"
+                        alt="Jet privado">
+                    <div class="card-body">
+                        <h5 class="card-title">Jet Privado</h5>
+                        <p class="card-text">Elegancia y confort para viajes exclusivos.</p> 
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4"> <img src="../../resources/avion_carga.jpg" class="card-img-top"
+                        alt="Avión de carga">
+                    <div class="card-body">
+                        <h5 class="card-title">Avión de Carga</h5>
+                        <p class="card-text">Soluciones robustas para transporte de mercancías.</p> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer class="bg-dark text-light mt-auto py-3">
+        <div class="container text-center">
+            <p>&copy; 2024 UcabAir. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../script.js"></script>
+</body>
+
+</html>

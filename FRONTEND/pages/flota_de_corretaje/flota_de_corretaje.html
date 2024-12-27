@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es-VE">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="../resources/logo.png" type="image/png">
+        <link rel="stylesheet" href="./header.css">
+        <link rel="stylesheet" href="./base.css">
+        <link rel="stylesheet" href="./catalogo.css">
+        <title>Flota de Corretaje</title>
+    </head>
+    <body>
+        <header class="header">
+            <section class="logo-ucabair">
+                <img src="../../resources/logo.png" alt="UCABAIR" class="logo">
+            </section>
+            <section class="buscador">
+                <form>
+                    <input type="text" id="busqueda" class="busqueda" placeholder="Buscar marcas, modelos y más...">
+                    <button><img src="../../resources/icono_lupa.png" alt="Buscar"></button>
+                </form>
+            </section>
+            <nav class="principal">
+                <ul>
+                    <li><a href=''><img src="../../resources/lugar.png" alt="Destino"><span id="destino">Ubicación</span></a></li>
+                    <li><a href="../flota_de_corretaje/flota_de_corretaje.html"><span>Flota de Corretaje</span></a></li>
+                    <li><a href=''><span id="nobre_perfil">Cuenta</span></a></li>
+                    <li><a href="../ingresar/ingresar.html"><span>Ingresar</span></a></li>
+                    <li><a href='../registro/registro.html'><span>Registrarse</span></a></li>
+                    <li><a href=''><span>Pedidos</span></a></li>
+                    <li><a href='../administracion/administracion.html'><span>Administración</span></a></li>
+                    <li><a href=''><span>Contáctenos</span></a></li>
+                </ul>
+            </nav>
+        </header>
+        <main class="contenido-main">
+            <section class="filtros">
+                <h3>Búsqueda rápida</h3>
+                <div class="filtro precio-filtro">
+                    <label for="precio">Precio</label>
+                    <input type="number" id="precioMin" placeholder="Min" class="input-filtro">
+                    <input type="number" id="precioMax" placeholder="Max" class="input-filtro">
+                </div>
+                <div class="filtro">
+                    <label for="año">Año</label>
+                    <select id="año">
+                        <option id="opciones-año">2024</option>
+                    </select>
+                </div>
+                <div class="filtro">
+                    <label for="condicion">Condición</label>
+                    <select id="condicion">
+                        <option id="opcion-nuevo" value="nuevo">Nuevo</option>
+                        <option id="opcion-usado" value="usado">Usado</option>
+                    </select>
+                </div>
+            </section>
+            <section class="catalogo">
+                <div class="catalogo-header">
+                    <h2>Flota de Corretaje</h2>
+                </div>
+                <div class="productos">
+                    <div class="producto">
+                        <a href="#" class="enlace">
+                            <h3>AU-80</h3>
+                            <img src="" alt="AU-80">
+                        </a>
+                        <p class="precio">USD $1,000,000</p>
+                        <p class="ubicacion">Ubicación: La Guaira, Venezuela</p>
+                        <button class="btn-adquirir">Comprar</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </body>
+</html>

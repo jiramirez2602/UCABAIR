@@ -1,0 +1,24 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Una API REST utilizando Node.jsy PostgreSQL con la biblioteca pg y usando Express.jspara el enrutamiento.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --env-file .env --watch src/index.js",
+    "lint": "eslint ."
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.1.1",
+    "eslint": "^9.1.0"
+  }
+}

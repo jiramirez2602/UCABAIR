@@ -1,0 +1,105 @@
+.pasos {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+.pasos h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.pasos h5 {
+    text-align: left;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.pasos button label{
+    cursor: pointer;
+}
+
+.pasos .info {
+    font-size: 12px;
+    text-align: justify;
+}
+
+.input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.datos {
+    margin-bottom: 1px;
+}
+
+.digito {
+    display: inline-block;
+    width: 40px;
+    padding: 10px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.btn_pasos {
+    width: 60%;
+    margin: 2px;
+    padding: 10px;
+    background-color: #f0c14b;
+    border: 1px solid #a88734;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn_pasos:hover {
+    background-color: #e2b33b;
+}
+
+.btn-reenviar{
+    background-color: #435973;
+    border: 1px solid #232F3E;
+}
+
+.btn-reenviar:hover{
+    background-color: #546f90;
+}
+
+.reenviar {
+    color: #ffff;
+}
+
+.btn_regresar {
+    background-color: #435973;
+    border: 1px solid #232F3E;
+}
+
+.btn_regresar:hover{
+    background-color: #546f90;
+}
+
+.btn_regresar label{
+    color: #ffff;
+}
+
+.enlace {
+    display: block;
+    margin-top: 15px;
+    color: #0066c0;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}

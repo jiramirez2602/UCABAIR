@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos de Aviones</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex align-items-center mb-4">
+            <a href="../inicio/index.html" class="btn btn-primary me-3">Regresar</a>
+            <h1 class="mb-0">Modelos de Aviones</h1>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar modelos...">
+            </div>
+            <div class="col-md-3">
+                <select id="limitSelect" class="form-select">
+                    <option value="10">10 registros</option>
+                    <option value="25">25 registros</option>
+                    <option value="50">50 registros</option>
+                    <option value="9999999">Todos los registros</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button id="searchButton" class="btn btn-primary">Buscar</button>
+                <button id="createButton" class="btn btn-success">Crear Modelo</button>
+            </div>
+        </div>
+
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Longitud (m)</th>
+                    <th>Envergadura (m)</th>
+                    <th>Altura (m)</th>
+                    <th>Peso Vacío (kg)</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="modelTableBody">
+                <!-- Table rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Create Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Nuevo Modelo de Avión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="longitud" class="form-label">Longitud (m)</label>
+                            <input type="number" class="form-control" id="longitud" name="longitud" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="envergadura" class="form-label">Envergadura (m)</label>
+                            <input type="number" class="form-control" id="envergadura" name="envergadura" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="altura" class="form-label">Altura (m)</label>
+                            <input type="number" class="form-control" id="altura" name="altura" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="peso_vacio" class="form-label">Peso Vacío (kg)</label>
+                            <input type="number" class="form-control" id="peso_vacio" name="peso_vacio" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear Modelo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Modal -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Actualizar Modelo de Avión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateForm">
+                        <input type="hidden" id="updateCodigo" name="codigo">
+                        <div class="mb-3">
+                            <label for="updateNombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="updateNombre" name="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateDescripcion" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="updateDescripcion" name="descripcion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateLongitud" class="form-label">Longitud (m)</label>
+                            <input type="number" class="form-control" id="updateLongitud" name="longitud" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateEnvergadura" class="form-label">Envergadura (m)</label>
+                            <input type="number" class="form-control" id="updateEnvergadura" name="envergadura" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateAltura" class="form-label">Altura (m)</label>
+                            <input type="number" class="form-control" id="updateAltura" name="altura" step="0.1" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updatePesoVacio" class="form-label">Peso Vacío (kg)</label>
+                            <input type="number" class="form-control" id="updatePesoVacio" name="peso_vacio" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar Modelo</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
