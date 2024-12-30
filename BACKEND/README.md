@@ -5,13 +5,14 @@ Una API REST utilizando Node.js y PostgreSQL con la biblioteca `pg` y usando Exp
 - Node.js
 - PostgreSQL
 
-## Instalación
-1. git clone https://github.com/jiramirez2602/BACKEN_UCABAIR.git
-2. npm install
-4. Crea un archivo `.env` en el directorio raíz y agrega lo siguiente:
+## Iniciar servidor
+1. npm install
+2. Crea un archivo `.env` en el directorio raíz y agrega lo siguiente:
     DB_USER=tu_usuario
     DB_PASSWORD=tu_contraseña
     DB_HOST=tu_host
     DB_PORT=tu_puerto
     DB_DATABASE=tu_base_de_datos
-5. Ejecuta el servidor: npm run dev
+    DB_SCHEMA=nombre_de_esquema
+    PORT=numero_de_puerto
+3. Ejecuta el servidor: npm run dev

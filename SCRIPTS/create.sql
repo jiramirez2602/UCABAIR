@@ -4,7 +4,7 @@ CREATE TABLE LUGAR (
     Lug_tipo VARCHAR(50) NOT NULL,
     Fk_lugar INTEGER,
     CONSTRAINT pk_lugar PRIMARY KEY (Lug_codigo),
-    CONSTRAINT fk_divide FOREIGN KEY (Fk_lugar) REFERENCES LUGAR(Lug_codigo),
+    CONSTRAINT fk_divide FOREIGN KEY (Fk_lugar) REFERENCES LUGAR(Lug_codigo) ON DELETE CASCADE,
     CONSTRAINT check_tipo CHECK (Lug_tipo IN ('Pais', 'Estado', 'Municipio', 'Parroquia'))
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE PERSONA_NATURAL(
     Pen_fecha_nac DATE NOT NULL,
     Fk_lugar INTEGER NOT NULL,
     CONSTRAINT pk_persona_natural PRIMARY KEY (Per_codigo),
-    CONSTRAINT fk_ubica_pn FOREIGN KEY(Fk_lugar) REFERENCES LUGAR(Lug_codigo)
+    CONSTRAINT fk_ubica_pn FOREIGN KEY(Fk_lugar) REFERENCES LUGAR(Lug_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PERSONA_JURIDICA(
@@ -32,7 +32,7 @@ CREATE TABLE PERSONA_JURIDICA(
     Pej_pagina_web VARCHAR(60) NOT NULL,
     Fk_lugar INTEGER NOT NULL,
     CONSTRAINT pk_persona_juridica PRIMARY KEY(Per_codigo),
-    CONSTRAINT fk_ubica_pj FOREIGN KEY(Fk_lugar) REFERENCES LUGAR(Lug_codigo)
+    CONSTRAINT fk_ubica_pj FOREIGN KEY(Fk_lugar) REFERENCES LUGAR(Lug_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE CORREO_ELECTRONICO(
@@ -41,8 +41,8 @@ CREATE TABLE CORREO_ELECTRONICO(
     Fk_persona_natural INTEGER,
     Fk_persona_juridica INTEGER,
     CONSTRAINT pk_correo_electronico PRIMARY KEY(Cor_codigo),
-    CONSTRAINT fk_asocia_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo),
-    CONSTRAINT fk_asocia_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo),
+    CONSTRAINT fk_asocia_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo) ON DELETE CASCADE,
+    CONSTRAINT fk_asocia_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo) ON DELETE CASCADE,
     CONSTRAINT check_direccion CHECK (Cor_direccion LIKE '%@%.%')
 );
 
@@ -53,8 +53,8 @@ CREATE TABLE TELEFONO(
     Fk_persona_natural INTEGER,
     Fk_persona_juridica INTEGER,
     CONSTRAINT pk_telefono PRIMARY KEY(Tel_codigo),
-    CONSTRAINT fk_posee_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo),
-    CONSTRAINT fk_posee_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo)
+    CONSTRAINT fk_posee_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo) ON DELETE CASCADE,
+    CONSTRAINT fk_posee_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo) ON DELETE CASCADE
 );
 --TODO:Agregar TRIGGER PARA ARCO EXCLUSIVO
 CREATE TABLE CLIENTE(
@@ -64,8 +64,8 @@ CREATE TABLE CLIENTE(
     Fk_persona_natural INTEGER,
     Fk_persona_juridica INTEGER,
     CONSTRAINT pk_cliente PRIMARY KEY(Cli_codigo),
-    CONSTRAINT fk_corresponde_a_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo),
-    CONSTRAINT fk_corresponde_a_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo)
+    CONSTRAINT fk_corresponde_a_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo) ON DELETE CASCADE,
+    CONSTRAINT fk_corresponde_a_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE EMPLEADO ( 
@@ -74,7 +74,7 @@ CREATE TABLE EMPLEADO (
 	Emp_titulacion VARCHAR(60) NOT NULL,
 	Fk_persona_natural INTEGER UNIQUE NOT NULL,
 	CONSTRAINT pk_empleado PRIMARY KEY (Emp_codigo),
-	CONSTRAINT fk_es FOREIGN KEY (Fk_persona_natural) REFERENCES PERSONA_NATURAL (Per_codigo),
+	CONSTRAINT fk_es FOREIGN KEY (Fk_persona_natural) REFERENCES PERSONA_NATURAL (Per_codigo) ON DELETE CASCADE,
 	CONSTRAINT check_experiencia CHECK (Emp_exp_profesional >= 0) 
 );
 
@@ -90,7 +90,7 @@ CREATE TABLE MAQUINARIA (
 	Maq_descripcion VARCHAR(200),
 	Fk_tipo_maquinaria INTEGER NOT NULL,
 	CONSTRAINT pk_maq_codigo PRIMARY KEY (Maq_codigo),
-	CONSTRAINT fk_tim_codigo FOREIGN KEY (Fk_tipo_maquinaria) REFERENCES TIPO_MAQUINARIA (Tim_codigo) 
+	CONSTRAINT fk_tim_codigo FOREIGN KEY (Fk_tipo_maquinaria) REFERENCES TIPO_MAQUINARIA (Tim_codigo) ON DELETE CASCADE 
 );
 
 CREATE TABLE UNIDAD_MEDIDA (
@@ -117,7 +117,7 @@ CREATE TABLE AVION(
 	Avi_fecha_fabricacion DATE NOT NULL,
 	Fk_modelo_avion INTEGER NOT NULL,
 	CONSTRAINT pk_avi_codigo PRIMARY KEY (Avi_codigo),
-	CONSTRAINT Fk_modelo_avion FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION (Moa_codigo)
+	CONSTRAINT Fk_modelo_avion FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION (Moa_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE SEDE (
@@ -126,7 +126,7 @@ CREATE TABLE SEDE (
     Sed_direccion VARCHAR(200) NOT NULL,
     Fk_lugar INTEGER NOT NULL,
     CONSTRAINT pk_sed_codigo PRIMARY KEY (Sed_codigo),
-    CONSTRAINT fk_lugar FOREIGN KEY (Fk_lugar) REFERENCES LUGAR (Lug_codigo)
+    CONSTRAINT fk_lugar FOREIGN KEY (Fk_lugar) REFERENCES LUGAR (Lug_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_PLANTA (
@@ -141,8 +141,8 @@ CREATE TABLE PLANTA (
 	Fk_tipo_planta INTEGER NOT NULL,
 	Fk_sede INTEGER NOT NULL,
 	CONSTRAINT pk_pla_nro_planta PRIMARY KEY (Pla_nro_planta),
-	CONSTRAINT fk_tipo_planta FOREIGN KEY (Fk_tipo_planta) REFERENCES TIPO_PLANTA(Tip_codigo),
-	CONSTRAINT fk_sede FOREIGN KEY (Fk_sede) REFERENCES SEDE (Sed_codigo)
+	CONSTRAINT fk_tipo_planta FOREIGN KEY (Fk_tipo_planta) REFERENCES TIPO_PLANTA(Tip_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_sede FOREIGN KEY (Fk_sede) REFERENCES SEDE (Sed_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE AREA(
@@ -150,7 +150,7 @@ CREATE TABLE AREA(
 	Are_nombre VARCHAR(100) NOT NULL,
 	Fk_planta INTEGER NOT NULL,
 	CONSTRAINT pk_are_codigo PRIMARY KEY (Are_codigo),
-	CONSTRAINT fk_planta FOREIGN KEY (Fk_planta) REFERENCES PLANTA(Pla_nro_planta)
+	CONSTRAINT fk_planta FOREIGN KEY (Fk_planta) REFERENCES PLANTA(Pla_nro_planta) ON DELETE CASCADE
 );
 
 CREATE TABLE ZONA(
@@ -160,8 +160,8 @@ CREATE TABLE ZONA(
 	Fk_area INTEGER NOT NULL,
 	Fk_empleado_supervisor INTEGER UNIQUE NOT NULL,
 	CONSTRAINT pk_zon_codigo PRIMARY KEY (Zon_codigo),
-	CONSTRAINT fk_area FOREIGN KEY (Fk_area) REFERENCES AREA(Are_codigo), 
-	CONSTRAINT fk_empleado_supervisor FOREIGN KEY (Fk_empleado_supervisor) REFERENCES EMPLEADO(Emp_codigo)
+	CONSTRAINT fk_area FOREIGN KEY (Fk_area) REFERENCES AREA(Are_codigo) ON DELETE CASCADE, 
+	CONSTRAINT fk_empleado_supervisor FOREIGN KEY (Fk_empleado_supervisor) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE FASE_CONFIGURACION (
@@ -172,8 +172,8 @@ CREATE TABLE FASE_CONFIGURACION (
 	Fk_modelo_avion INTEGER NOT NULL,
 	Fk_zona INTEGER NOT NULL,
 	CONSTRAINT pk_fac_codigo PRIMARY KEY (Fac_codigo),
-	CONSTRAINT fk_ensambla FOREIGN KEY (Fk_zona) REFERENCES ZONA(Zon_codigo),
-	CONSTRAINT fk_modelo_avion FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION(Moa_codigo)
+	CONSTRAINT fk_ensambla FOREIGN KEY (Fk_zona) REFERENCES ZONA(Zon_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_modelo_avion FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION(Moa_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE FASE_EJECUCION (
@@ -183,7 +183,7 @@ CREATE TABLE FASE_EJECUCION (
 	Fae_fecha_fin_real DATE,
 	Fk_avion INTEGER NOT NULL,
 	CONSTRAINT pk_fae_codigo PRIMARY KEY (Fae_codigo),
-	CONSTRAINT fk_aplica FOREIGN KEY (Fk_avion) REFERENCES AVION(Avi_codigo)
+	CONSTRAINT fk_aplica FOREIGN KEY (Fk_avion) REFERENCES AVION(Avi_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE ASIGNACION_MAQUINARIA ( 
@@ -191,8 +191,8 @@ CREATE TABLE ASIGNACION_MAQUINARIA (
 	Fk_fase_ejecucion INTEGER NOT NULL,
 	Fk_maquinaria INTEGER NOT NULL,
 	CONSTRAINT pk_asm_codigo PRIMARY KEY (Asm_codigo),
-	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION (Fae_codigo),
-	CONSTRAINT fk_maquinaria FOREIGN KEY (Fk_maquinaria) REFERENCES MAQUINARIA (Maq_codigo) 
+	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION (Fae_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_maquinaria FOREIGN KEY (Fk_maquinaria) REFERENCES MAQUINARIA (Maq_codigo) ON DELETE CASCADE 
 );
 
 CREATE TABLE TIPO_PIEZA (
@@ -212,9 +212,9 @@ CREATE TABLE CARACTERISTICA (
 	Fk_modelo_avion INTEGER,
 	Fk_tipo_pieza INTEGER,
 	CONSTRAINT pk_car_codigo PRIMARY KEY (Car_codigo),
-	CONSTRAINT fk_modelo_avion FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION(Moa_codigo),
-	CONSTRAINT fk_tipo_pieza FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo),
-	CONSTRAINT fk_se_mide_por FOREIGN KEY (Fk_unidad_medida) REFERENCES UNIDAD_MEDIDA(Unm_codigo)
+	CONSTRAINT fk_modelo_avion FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION(Moa_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_tipo_pieza FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_mide_por FOREIGN KEY (Fk_unidad_medida) REFERENCES UNIDAD_MEDIDA(Unm_codigo) ON DELETE CASCADE
 );
 
 --TODO: VERIFICAR SI EL CONSTRAINT DE CHECK APLICA PARA EL ATRIBUTO ESTATUS
@@ -228,11 +228,11 @@ CREATE TABLE PIEZA(
 	Fk_tipo_pieza INTEGER NOT NULL,
 	Fk_fase_ejecucion INTEGER NOT NULL,
 	CONSTRAINT pk_pie_codigo PRIMARY KEY (Pie_codigo),
-	CONSTRAINT fk_zona FOREIGN KEY (Fk_zona) REFERENCES ZONA(Zon_codigo),
-	CONSTRAINT fk_avion FOREIGN KEY (Fk_avion) REFERENCES AVION(Avi_codigo),
-	CONSTRAINT fk_pieza FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo),
-	CONSTRAINT fk_tipo_pieza FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo),
-	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION(Fae_codigo)
+	CONSTRAINT fk_zona FOREIGN KEY (Fk_zona) REFERENCES ZONA(Zon_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_avion FOREIGN KEY (Fk_avion) REFERENCES AVION(Avi_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_pieza FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_tipo_pieza FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION(Fae_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE ASIGNACION_EMPLEADO(
@@ -242,8 +242,8 @@ CREATE TABLE ASIGNACION_EMPLEADO(
 	Fk_empleado INTEGER NOT NULL,
 	Fk_fase_ejecucion INTEGER NOT NULL,
 	CONSTRAINT pk_ase_codigo PRIMARY KEY (Ase_codigo),
-	CONSTRAINT fk_empleado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo),
-	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION(Fae_codigo)
+	CONSTRAINT fk_empleado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION(Fae_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE ALMACEN(
@@ -252,7 +252,7 @@ CREATE TABLE ALMACEN(
 	Alm_descripcion VARCHAR(200),
 	Fk_planta INTEGER UNIQUE NOT NULL,
 	CONSTRAINT pk_alm_codigo PRIMARY KEY (Alm_codigo),
-	CONSTRAINT fk_planta FOREIGN KEY (Fk_planta) REFERENCES PLANTA(pla_nro_planta)
+	CONSTRAINT fk_planta FOREIGN KEY (Fk_planta) REFERENCES PLANTA(pla_nro_planta) ON DELETE CASCADE
 );
 
 CREATE TABLE EMPLEADO_ZONA(
@@ -262,8 +262,8 @@ CREATE TABLE EMPLEADO_ZONA(
  	Fk_empleado INTEGER NOT NULL,
 	Fk_zona INTEGER NOT NULL,
 	CONSTRAINT pk_emz_codigo PRIMARY KEY (Emz_codigo),
-	CONSTRAINT fk_empleado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo),
-	CONSTRAINT fk_zona FOREIGN KEY (Fk_zona) REFERENCES ZONA(zon_codigo)
+	CONSTRAINT fk_empleado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_zona FOREIGN KEY (Fk_zona) REFERENCES ZONA(zon_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE ESTATUS(
@@ -279,8 +279,8 @@ CREATE TABLE FASE_EJECUCION_ESTATUS(
 	Fk_fase_ejecucion INTEGER NOT NULL,
 	Fk_estatus INTEGER NOT NULL,
 	CONSTRAINT pk_fee_codigo PRIMARY KEY (Fee_codigo),
-	CONSTRAINT fk_estatus FOREIGN KEY (Fk_estatus) REFERENCES ESTATUS(Est_codigo),
-	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION(Fae_codigo)
+	CONSTRAINT fk_estatus FOREIGN KEY (Fk_estatus) REFERENCES ESTATUS(Est_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_fase_ejecucion FOREIGN KEY (Fk_fase_ejecucion) REFERENCES FASE_EJECUCION(Fae_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PRIVILEGIO (
@@ -302,8 +302,8 @@ CREATE TABLE ROL_PRIVILEGIO(
 	Fk_rol INTEGER NOT NULL,
 	Fk_privilegio INTEGER NOT NULL,
 	CONSTRAINT pk_rop_codigo PRIMARY KEY (Rop_codigo),
-	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo),
-	CONSTRAINT fk_privilegio FOREIGN KEY (Fk_privilegio) REFERENCES PRIVILEGIO(Pri_codigo)
+	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_privilegio FOREIGN KEY (Fk_privilegio) REFERENCES PRIVILEGIO(Pri_codigo) ON DELETE CASCADE
 );
 
 --TODO: chequear si este arc exclusivo se hace con trigger
@@ -314,8 +314,8 @@ CREATE TABLE USUARIO(
     Fk_empleado INTEGER UNIQUE,
     Fk_cliente INTEGER UNIQUE,
     CONSTRAINT pk_usu_codigo PRIMARY KEY (Usu_codigo),
-    CONSTRAINT fk_empleado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo),
-    CONSTRAINT fk_cliente FOREIGN KEY (Fk_cliente) REFERENCES CLIENTE(cli_codigo),
+    CONSTRAINT fk_empleado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo) ON DELETE CASCADE,
+    CONSTRAINT fk_cliente FOREIGN KEY (Fk_cliente) REFERENCES CLIENTE(cli_codigo) ON DELETE CASCADE,
     CONSTRAINT check_arco_exclusivo CHECK (
         (Fk_empleado IS NOT NULL AND Fk_cliente IS NULL) OR
         (Fk_empleado IS NULL AND Fk_cliente IS NOT NULL)-- El arco exclusivo es entre Empleado y Cliente
@@ -327,8 +327,8 @@ CREATE TABLE USUARIO_ROL(
 	Fk_usuario INTEGER NOT NULL,
 	Fk_rol INTEGER NOT NULL,
 	CONSTRAINT pk_usr_codigo PRIMARY KEY (Usr_codigo),
-	CONSTRAINT fk_usuario FOREIGN KEY (Fk_usuario) REFERENCES USUARIO(Usu_codigo),
-	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo)
+	CONSTRAINT fk_usuario FOREIGN KEY (Fk_usuario) REFERENCES USUARIO(Usu_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE CARGO(
@@ -346,8 +346,8 @@ CREATE TABLE EMPLEADO_CARGO(
 	Fk_empleado INTEGER NOT NULL,
 	Fk_cargo INTEGER NOT NULL,
 	CONSTRAINT pk_emc_codigo PRIMARY KEY (Emc_codigo),
-	CONSTRAINT fk_es_ejercido FOREIGN KEY (Fk_cargo) REFERENCES CARGO(Car_codigo),
-	CONSTRAINT fk_ejerce FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo)
+	CONSTRAINT fk_es_ejercido FOREIGN KEY (Fk_cargo) REFERENCES CARGO(Car_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_ejerce FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_MATERIA_PRIMA(
@@ -362,7 +362,7 @@ CREATE TABLE MATERIA_PRIMA(
 	Mat_nombre VARCHAR(100) NOT NULL,
 	Fk_tipo_materia_prima INTEGER NOT NULL,
 	CONSTRAINT pk_mat_codigo PRIMARY KEY (Mat_codigo),
-	CONSTRAINT fk_pertenece FOREIGN KEY (Fk_tipo_materia_prima) REFERENCES TIPO_MATERIA_PRIMA(Tmp_codigo)
+	CONSTRAINT fk_pertenece FOREIGN KEY (Fk_tipo_materia_prima) REFERENCES TIPO_MATERIA_PRIMA(Tmp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE INVENTARIO(
@@ -373,9 +373,9 @@ CREATE TABLE INVENTARIO(
 	Fk_materia_prima INTEGER,
 	Fk_pieza INTEGER,
 	CONSTRAINT pk_inv_codigo PRIMARY KEY (Inv_codigo),
-	CONSTRAINT fk_almacena FOREIGN KEY (Fk_almacen) REFERENCES ALMACEN(Alm_codigo),
-	CONSTRAINT fk_se_almacena FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo),
-	CONSTRAINT fk_se_deposita FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo)
+	CONSTRAINT fk_almacena FOREIGN KEY (Fk_almacen) REFERENCES ALMACEN(Alm_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_almacena FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_deposita FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE SOLICITUD(
@@ -388,9 +388,9 @@ CREATE TABLE SOLICITUD(
 	Fk_inventario_2 INTEGER NOT NULL,
 	Fk_sede INTEGER NOT NULL,
 	CONSTRAINT pk_sol_codigo PRIMARY KEY(Sol_codigo),
-	CONSTRAINT fk_expide_1 FOREIGN KEY(Fk_inventario_1) REFERENCES INVENTARIO(Inv_codigo),
-	CONSTRAINT fk_expide_2 FOREIGN KEY(Fk_inventario_2) REFERENCES INVENTARIO(Inv_codigo),
-	CONSTRAINT fk_se_origina_en FOREIGN KEY (Fk_sede) REFERENCES SEDE(Sed_codigo)
+	CONSTRAINT fk_expide_1 FOREIGN KEY(Fk_inventario_1) REFERENCES INVENTARIO(Inv_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_expide_2 FOREIGN KEY(Fk_inventario_2) REFERENCES INVENTARIO(Inv_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_origina_en FOREIGN KEY (Fk_sede) REFERENCES SEDE(Sed_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE BANCO(
@@ -417,10 +417,10 @@ CREATE TABLE METODO_PAGO(
 	Fk_banco_ch INTEGER,
 	CONSTRAINT pk_met_codigo PRIMARY KEY(Met_codigo),
 	CONSTRAINT check_met_tipo CHECK (Met_tipo IN ('T-CREDITO', 'T-DEBITO', 'TRANSFERENCIA', 'EFECTIVO', 'CHEQUE')),
-	CONSTRAINT fk_emite FOREIGN KEY(Fk_banco_tc) REFERENCES BANCO(Ban_codigo),
-	CONSTRAINT fk_se_emite FOREIGN KEY(Fk_banco_td) REFERENCES BANCO(Ban_codigo),
-	CONSTRAINT fk_es_emitido FOREIGN KEY(Fk_banco_ch) REFERENCES BANCO(Ban_codigo),
-	CONSTRAINT fk_efecua FOREIGN KEY(Fk_banco_tsf) REFERENCES BANCO(Ban_codigo)
+	CONSTRAINT fk_emite FOREIGN KEY(Fk_banco_tc) REFERENCES BANCO(Ban_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_emite FOREIGN KEY(Fk_banco_td) REFERENCES BANCO(Ban_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_emitido FOREIGN KEY(Fk_banco_ch) REFERENCES BANCO(Ban_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_efecua FOREIGN KEY(Fk_banco_tsf) REFERENCES BANCO(Ban_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PAGO_EMPLEADO(
@@ -433,8 +433,8 @@ CREATE TABLE PAGO_EMPLEADO(
 	Fk_empleado_cargo INTEGER NOT NULL,
 	Fk_metodo_pago INTEGER NOT NULL,
 	CONSTRAINT pk_pae_codigo PRIMARY KEY(Pae_codigo),
-	CONSTRAINT fk_esta_asociado FOREIGN KEY(Fk_empleado_cargo) REFERENCES EMPLEADO_CARGO(Emc_codigo),
-	CONSTRAINT fk_se_paga FOREIGN KEY(Fk_metodo_pago) REFERENCES METODO_PAGO(Met_codigo)
+	CONSTRAINT fk_esta_asociado FOREIGN KEY(Fk_empleado_cargo) REFERENCES EMPLEADO_CARGO(Emc_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_paga FOREIGN KEY(Fk_metodo_pago) REFERENCES METODO_PAGO(Met_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE VENTA(
@@ -448,8 +448,8 @@ CREATE TABLE VENTA(
 	Fk_cliente INTEGER NOT NULL,
 	Fk_avion INTEGER UNIQUE NOT NULL,
 	CONSTRAINT pk_ven_codigo PRIMARY KEY(Ven_codigo),
-	CONSTRAINT fk_solicita FOREIGN KEY(Fk_cliente) REFERENCES CLIENTE(Cli_codigo),
-	CONSTRAINT fk_precisa FOREIGN KEY(Fk_avion) REFERENCES AVION(Avi_codigo)
+	CONSTRAINT fk_solicita FOREIGN KEY(Fk_cliente) REFERENCES CLIENTE(Cli_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_precisa FOREIGN KEY(Fk_avion) REFERENCES AVION(Avi_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TASA_CAMBIO(
@@ -469,8 +469,8 @@ CREATE TABLE COMPRA(
 	Fk_persona_juridica INTEGER NOT NULL,
 	Fk_sede INTEGER NOT NULL,
 	CONSTRAINT pk_com_codigo PRIMARY KEY(Com_codigo),
-	CONSTRAINT fk_es_facturada FOREIGN KEY(Fk_sede) REFERENCES SEDE(Sed_codigo),
-	CONSTRAINT fk_provee FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo)
+	CONSTRAINT fk_es_facturada FOREIGN KEY(Fk_sede) REFERENCES SEDE(Sed_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_provee FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PAGO(
@@ -482,10 +482,10 @@ CREATE TABLE PAGO(
 	Fk_venta INTEGER,
 	Fk_compra INTEGER,
 	CONSTRAINT pk_pag_codigo PRIMARY KEY(Pag_codigo),
-	CONSTRAINT fk_se_implica FOREIGN KEY(Fk_tasa_cambio) REFERENCES TASA_CAMBIO(Tac_codigo),
-	CONSTRAINT fk_exige FOREIGN KEY(Fk_metodo_pago) REFERENCES METODO_PAGO(Met_codigo),
-	CONSTRAINT fk_conlleva FOREIGN KEY(Fk_venta) REFERENCES VENTA(Ven_codigo),
-	CONSTRAINT fk_implica FOREIGN KEY(Fk_compra) REFERENCES COMPRA(Com_codigo)
+	CONSTRAINT fk_se_implica FOREIGN KEY(Fk_tasa_cambio) REFERENCES TASA_CAMBIO(Tac_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_exige FOREIGN KEY(Fk_metodo_pago) REFERENCES METODO_PAGO(Met_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_conlleva FOREIGN KEY(Fk_venta) REFERENCES VENTA(Ven_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_implica FOREIGN KEY(Fk_compra) REFERENCES COMPRA(Com_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE VENTA_ESTATUS(
@@ -495,8 +495,8 @@ CREATE TABLE VENTA_ESTATUS(
 	Fk_venta INTEGER NOT NULL,
 	Fk_estatus INTEGER NOT NULL,
 	CONSTRAINT pk_vee_codigo PRIMARY KEY(Vee_codigo),
-	CONSTRAINT fk_se_encuentra FOREIGN KEY(Fk_venta) REFERENCES VENTA(Ven_codigo),
-	CONSTRAINT fk_actualiza FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo)
+	CONSTRAINT fk_se_encuentra FOREIGN KEY(Fk_venta) REFERENCES VENTA(Ven_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_actualiza FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PRUEBA(
@@ -506,7 +506,7 @@ CREATE TABLE PRUEBA(
 	Pru_duracion_estimada INTEGER NOT NULL,
 	Fk_tipo_pieza INTEGER NOT NULL,
 	CONSTRAINT pk_pru_codigo PRIMARY KEY(Pru_codigo),
-	CONSTRAINT fk_se_certifica FOREIGN KEY(Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo)
+	CONSTRAINT fk_se_certifica FOREIGN KEY(Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PROCESO_PRUEBA(
@@ -519,10 +519,10 @@ CREATE TABLE PROCESO_PRUEBA(
 	Fk_materia_prima INTEGER,
 	Fk_pieza INTEGER,
 	CONSTRAINT pk_prp_codigo PRIMARY KEY(Prp_codigo),
-	CONSTRAINT fk_controla FOREIGN KEY(Fk_prueba) REFERENCES PRUEBA(Pru_codigo),
-	CONSTRAINT fk_se_somete FOREIGN KEY(Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo),
-	CONSTRAINT fk_ejecuta FOREIGN KEY(Fk_zona) REFERENCES ZONA(Zon_codigo),
-	CONSTRAINT fk_es_controlada FOREIGN KEY(Fk_pieza) REFERENCES PIEZA(Pie_codigo)
+	CONSTRAINT fk_controla FOREIGN KEY(Fk_prueba) REFERENCES PRUEBA(Pru_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_somete FOREIGN KEY(Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_ejecuta FOREIGN KEY(Fk_zona) REFERENCES ZONA(Zon_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_controlada FOREIGN KEY(Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PRUEBA_ESTATUS_HISTORICO(
@@ -533,9 +533,9 @@ CREATE TABLE PRUEBA_ESTATUS_HISTORICO(
 	Fk_proceso_prueba_2 INTEGER NOT NULL,
 	Fk_estatus INTEGER NOT NULL,
 	CONSTRAINT pk_peh_codigo PRIMARY KEY(Peh_codigo),
-	CONSTRAINT fk_pasa_por_1 FOREIGN KEY(Fk_proceso_prueba_1) REFERENCES PROCESO_PRUEBA(Prp_codigo),
-	CONSTRAINT fk_pasa_por_2 FOREIGN KEY(Fk_proceso_prueba_2) REFERENCES PROCESO_PRUEBA(Prp_codigo),
-	CONSTRAINT fk_define FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo)
+	CONSTRAINT fk_pasa_por_1 FOREIGN KEY(Fk_proceso_prueba_1) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_pasa_por_2 FOREIGN KEY(Fk_proceso_prueba_2) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_define FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE ENCARGADO_PRUEBA(
@@ -544,9 +544,9 @@ CREATE TABLE ENCARGADO_PRUEBA(
 	Fk_proceso_prueba_2 INTEGER NOT NULL,
 	Fk_empleado INTEGER NOT NULL,
 	CONSTRAINT pk_enp_codigo PRIMARY KEY(Enp_codigo),
-	CONSTRAINT fk_se_encarga FOREIGN KEY(Fk_empleado) REFERENCES EMPLEADO(Emp_codigo),
-	CONSTRAINT fk_es_encargado_a_1 FOREIGN KEY(Fk_proceso_prueba_1) REFERENCES PROCESO_PRUEBA(Prp_codigo),
-	CONSTRAINT fk_es_encargado_a_2 FOREIGN KEY(Fk_proceso_prueba_2) REFERENCES PROCESO_PRUEBA(Prp_codigo)
+	CONSTRAINT fk_se_encarga FOREIGN KEY(Fk_empleado) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_encargado_a_1 FOREIGN KEY(Fk_proceso_prueba_1) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_encargado_a_2 FOREIGN KEY(Fk_proceso_prueba_2) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE RED_SOCIAL(
@@ -555,7 +555,7 @@ CREATE TABLE RED_SOCIAL(
     Res_descripcion VARCHAR(100) NOT NULL,
     fk_empleado INTEGER NOT NULL,
     CONSTRAINT pk_red_social PRIMARY KEY (Res_codigo),
-    CONSTRAINT fk_vincula FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo)
+    CONSTRAINT fk_vincula FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(emp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE HORARIO(
@@ -573,7 +573,7 @@ CREATE TABLE ASISTENCIA(
     Asi_fecha_hora_fin TIMESTAMP NOT NULL,
     Fk_empleado INTEGER NOT NULL,
     CONSTRAINT pk_asistencia PRIMARY KEY (Asi_codigo),
-    CONSTRAINT fk_asignado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo)
+    CONSTRAINT fk_asignado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE VALOR_HORA_EXTRA(
@@ -591,8 +591,8 @@ CREATE TABLE HORA_EXTRA(
 	Fk_asistencia INTEGER NOT NULL,
 	Fk_valor_hora_extra INTEGER UNIQUE NOT NULL,
 	CONSTRAINT pk_hora_extra PRIMARY KEY (Hoe_codigo),
-	CONSTRAINT fk_se_valora FOREIGN KEY (Fk_asistencia) REFERENCES ASISTENCIA(Asi_codigo),
-	CONSTRAINT fk_se_cotiza FOREIGN KEY (Fk_valor_hora_extra) REFERENCES VALOR_HORA_EXTRA(Val_codigo)
+	CONSTRAINT fk_se_valora FOREIGN KEY (Fk_asistencia) REFERENCES ASISTENCIA(Asi_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_cotiza FOREIGN KEY (Fk_valor_hora_extra) REFERENCES VALOR_HORA_EXTRA(Val_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE DETALLE_COMPRA(
@@ -602,8 +602,8 @@ CREATE TABLE DETALLE_COMPRA(
 	Fk_compra INTEGER NOT NULL,
 	Fk_materia_prima INTEGER NOT NULL,
 	CONSTRAINT pk_detalle_compra PRIMARY KEY (Dec_codigo),
-	CONSTRAINT fk_guarda FOREIGN KEY (Fk_compra) REFERENCES COMPRA(Com_codigo),
-	CONSTRAINT fk_es_compra FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo)
+	CONSTRAINT fk_guarda FOREIGN KEY (Fk_compra) REFERENCES COMPRA(Com_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_compra FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_MATERIA_PRIMA_TIPO_PIEZA(
@@ -611,8 +611,8 @@ CREATE TABLE TIPO_MATERIA_PRIMA_TIPO_PIEZA(
 	Fk_tipo_pieza INTEGER NOT NULL,
 	Fk_tipo_materia_prima INTEGER NOT NULL,
 	CONSTRAINT pk_tipo_materia_prima_tipo_pieza PRIMARY KEY (Ttp_codigo),
-	CONSTRAINT fk_compuesto_por FOREIGN KEY(Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo),
-	CONSTRAINT fk_compone FOREIGN KEY(Fk_tipo_materia_prima) REFERENCES TIPO_MATERIA_PRIMA(Tmp_codigo)
+	CONSTRAINT fk_compuesto_por FOREIGN KEY(Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_compone FOREIGN KEY(Fk_tipo_materia_prima) REFERENCES TIPO_MATERIA_PRIMA(Tmp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE EMPLEADO_HORARIO(
@@ -620,8 +620,8 @@ CREATE TABLE EMPLEADO_HORARIO(
 	Fk_empleado INTEGER NOT NULL,
 	Fk_horario INTEGER NOT NULL,
 	CONSTRAINT pk_empleado_horario PRIMARY KEY (Emh_codigo),
-	CONSTRAINT fk_asignado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo),
-	CONSTRAINT fk_se_asigna FOREIGN KEY (Fk_horario) REFERENCES HORARIO(Hor_codigo)
+	CONSTRAINT fk_asignado FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_se_asigna FOREIGN KEY (Fk_horario) REFERENCES HORARIO(Hor_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PIEZA_ESTATUS(
@@ -631,8 +631,8 @@ CREATE TABLE PIEZA_ESTATUS(
 	Fk_pieza INTEGER NOT NULL,
 	Fk_estatus INTEGER NOT NULL,
 	CONSTRAINT pk_pieza_estatus PRIMARY KEY (Pes_codigo),
-	CONSTRAINT fk_es_posicionada FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo),
-	CONSTRAINT fk_posiciona FOREIGN KEY (Fk_estatus) REFERENCES ESTATUS(Est_codigo)
+	CONSTRAINT fk_es_posicionada FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_posiciona FOREIGN KEY (Fk_estatus) REFERENCES ESTATUS(Est_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE CARGO_CONFIGURACION(
@@ -640,8 +640,8 @@ CREATE TABLE CARGO_CONFIGURACION(
 	Fk_cargo INTEGER NOT NULL,
 	Fk_fase_configuracion INTEGER NOT NULL,
 	CONSTRAINT pk_cargo_configuracion PRIMARY KEY (Cac_codigo),
-	CONSTRAINT fk_demanda FOREIGN KEY (Fk_fase_configuracion) REFERENCES FASE_CONFIGURACION(Fac_codigo),
-	CONSTRAINT fk_es_demandado FOREIGN KEY (Fk_cargo) REFERENCES CARGO(Car_codigo)
+	CONSTRAINT fk_demanda FOREIGN KEY (Fk_fase_configuracion) REFERENCES FASE_CONFIGURACION(Fac_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_demandado FOREIGN KEY (Fk_cargo) REFERENCES CARGO(Car_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_MAQUINARIA_CONFIGURACION(
@@ -649,8 +649,8 @@ CREATE TABLE TIPO_MAQUINARIA_CONFIGURACION(
 	Fk_tipo_maquinaria INTEGER NOT NULL,
 	Fk_fase_configuracion INTEGER NOT NULL,
 	CONSTRAINT pk_tipo_maquinaria_configuracion PRIMARY KEY (Tmc_codigo),
-	CONSTRAINT fk_pide FOREIGN KEY (Fk_fase_configuracion) REFERENCES FASE_CONFIGURACION(Fac_codigo),
-	CONSTRAINT fk_es_pedido FOREIGN KEY (Fk_tipo_maquinaria) REFERENCES TIPO_MAQUINARIA(Tim_codigo)
+	CONSTRAINT fk_pide FOREIGN KEY (Fk_fase_configuracion) REFERENCES FASE_CONFIGURACION(Fac_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_pedido FOREIGN KEY (Fk_tipo_maquinaria) REFERENCES TIPO_MAQUINARIA(Tim_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE MATERIA_PRIMA_ESTATUS(
@@ -658,8 +658,8 @@ CREATE TABLE MATERIA_PRIMA_ESTATUS(
 	Fk_materia_prima INTEGER NOT NULL,
 	Fk_estatus INTEGER NOT NULL,
 	CONSTRAINT pk_materia_prima_estatus PRIMARY KEY(Mpe_codigo),
-	CONSTRAINT fk_alberga FOREIGN KEY(Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo),
-	CONSTRAINT fk_adapta FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo)
+	CONSTRAINT fk_alberga FOREIGN KEY(Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_adapta FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE PROVEEDOR_TIPO_MATERIA(
@@ -668,8 +668,8 @@ CREATE TABLE PROVEEDOR_TIPO_MATERIA(
 	Fk_persona_juridica INTEGER NOT NULL,
 	Fk_tipo_materia_prima INTEGER NOT NULL,
 	CONSTRAINT pk_proveedor_tipo_materia PRIMARY KEY (Ptm_codigo),
-	CONSTRAINT fk_ofrece FOREIGN KEY (Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo),
-	CONSTRAINT fk_es_ofrecido FOREIGN KEY (Fk_tipo_materia_prima) REFERENCES TIPO_MATERIA_PRIMA(Tmp_codigo)
+	CONSTRAINT fk_ofrece FOREIGN KEY (Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_ofrecido FOREIGN KEY (Fk_tipo_materia_prima) REFERENCES TIPO_MATERIA_PRIMA(Tmp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE MATERIA_ZONA(
@@ -677,8 +677,8 @@ CREATE TABLE MATERIA_ZONA(
 	Fk_zona INTEGER NOT NULL,
 	Fk_materia_prima INTEGER NOT NULL,
 	CONSTRAINT pk_materia_zona PRIMARY KEY (Maz_codigo),
-	CONSTRAINT fk_recibe FOREIGN KEY (Fk_zona) REFERENCES ZONA(Zon_codigo),
-	CONSTRAINT fk_es_recibida FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo)
+	CONSTRAINT fk_recibe FOREIGN KEY (Fk_zona) REFERENCES ZONA(Zon_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_recibida FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE BENEFICIARIO (
@@ -686,8 +686,8 @@ CREATE TABLE BENEFICIARIO (
 	Fk_persona_natural INTEGER NOT NULL,
 	Fk_empleado INTEGER NOT NULL,
 	CONSTRAINT pk_beneficiario PRIMARY KEY (Ben_codigo),
-	CONSTRAINT fk_beneficia FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo),
-	CONSTRAINT fk_persona_natural FOREIGN KEY (Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo)
+	CONSTRAINT fk_beneficia FOREIGN KEY (Fk_empleado) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_persona_natural FOREIGN KEY (Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE CARGO_PRUEBA (
@@ -695,8 +695,8 @@ CREATE TABLE CARGO_PRUEBA (
 	Fk_cargo INTEGER NOT NULL,
 	Fk_prueba INTEGER NOT NULL,
 	CONSTRAINT pk_cargo_prueba PRIMARY KEY (Cap_codigo),
-	CONSTRAINT fk_realiza FOREIGN KEY (Fk_cargo) REFERENCES CARGO(Car_codigo),
-	CONSTRAINT fk_es_realizado FOREIGN KEY (Fk_prueba) REFERENCES PRUEBA(Pru_codigo)
+	CONSTRAINT fk_realiza FOREIGN KEY (Fk_cargo) REFERENCES CARGO(Car_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_es_realizado FOREIGN KEY (Fk_prueba) REFERENCES PRUEBA(Pru_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE MOVIMIENTO (
@@ -707,7 +707,7 @@ CREATE TABLE MOVIMIENTO (
 	Fk_inventario INTEGER NOT NULL,
 	CONSTRAINT check_tipo_transaccion CHECK (Mov_tipo_transaccion IN ('ENTRADA', 'SALIDA')),
 	CONSTRAINT pk_mov_codigo PRIMARY KEY (Mov_codigo),
-	CONSTRAINT fk_mueve FOREIGN KEY (Fk_inventario) REFERENCES INVENTARIO(Inv_codigo)
+	CONSTRAINT fk_mueve FOREIGN KEY (Fk_inventario) REFERENCES INVENTARIO(Inv_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_PIEZA_MODELO (
@@ -715,8 +715,8 @@ CREATE TABLE TIPO_PIEZA_MODELO (
 	Fk_tipo_pieza INTEGER NOT NULL,
 	Fk_modelo_avion INTEGER NOT NULL,
 	CONSTRAINT pk_tipo_pieza_modelo PRIMARY KEY (Tpm_codigo),
-	CONSTRAINT fk_conforma FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo),
-	CONSTRAINT fk_esta_conformado FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION(Moa_codigo)
+	CONSTRAINT fk_conforma FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_esta_conformado FOREIGN KEY (Fk_modelo_avion) REFERENCES MODELO_AVION(Moa_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE TIPO_PIEZA_FASE (
@@ -724,6 +724,6 @@ CREATE TABLE TIPO_PIEZA_FASE (
 	Fk_tipo_pieza INTEGER NOT NULL,
 	Fk_fase_configuracion INTEGER NOT NULL,
 	CONSTRAINT pk_tipo_pieza_fase PRIMARY KEY (Tpf_codigo),
-	CONSTRAINT fk_es_fabricada FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo),
-	CONSTRAINT fk_fabrica FOREIGN KEY (Fk_fase_configuracion) REFERENCES FASE_CONFIGURACION(Fac_codigo)
+	CONSTRAINT fk_es_fabricada FOREIGN KEY (Fk_tipo_pieza) REFERENCES TIPO_PIEZA(Tip_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_fabrica FOREIGN KEY (Fk_fase_configuracion) REFERENCES FASE_CONFIGURACION(Fac_codigo) ON DELETE CASCADE
 );

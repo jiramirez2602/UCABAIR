@@ -1,6 +1,6 @@
 // Simulated user roles and privileges
 const userRoles = {
-    admin: ['modelo_avion', 'prueba'],
+    admin: ['modelo_avion', 'prueba', 'persona_natural', 'empleado'],
     manager: ['purchase', 'sale'],
     worker: ['manufacturing']
 };

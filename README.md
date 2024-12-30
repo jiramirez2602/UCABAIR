@@ -11,4 +11,4 @@ Este proyecto es una aplicación web fullstack que utiliza HTML, CSS y JavaScrip
 El frontend está construido utilizando HTML para la estructura, CSS para el diseño y JavaScript para la interactividad. Se incluye además Bootstrap 
 
 # Creado por:
-Jorge Ramírez, Angelo Di Martino y María Fernanda Bolívar# UCABAIR
+Jorge Ramírez, Angelo Di Martino y María Fernanda Bolívar

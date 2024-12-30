@@ -1,7 +1,7 @@
 # FRONTEND PROYECTO UCAB AIR
 Esta implementación proporciona una página de inicio de sesión y una aplicación con un menú que muestra elementos según los roles y privilegios de la persona que inicia sesión. El tema de la aplicación es una fábrica de aviones con opciones de compra, venta y fabricación. El menú funciona con href para abrir una nueva página de la carpeta "páginas" cada vez que se elige una opción del menú.
 
-To use this application desde la consola:
+Arrancar app desde consola:
 1. npm i
 2. npm run dev
 3. Ingresar a: http://192.168.0.103:8080 o  http://127.0.0.1:8080
