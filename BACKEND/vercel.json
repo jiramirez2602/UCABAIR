@@ -1,15 +1,21 @@
 {
     "version": 2,
+    "name": "backend",
     "builds": [
-        {
-            "src": "./src/index.js",
-            "use": "@vercel/node"
-        }
+      {
+        "src": "src/index.js",
+        "use": "@vercel/node"
+      }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "/"
-        }
-    ]
-}
+      { "src": "/(.*)", "dest": "/src/index.js" }
+    ],
+    "env": {
+      "PGHOST": "@pg_host",
+      "PGUSER": "@pg_user",
+      "PGDATABASE": "@pg_database",
+      "PGPASSWORD": "@pg_password",
+      "PGPORT": "@pg_port"
+    }
+  }
+  
