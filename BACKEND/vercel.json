@@ -11,13 +11,13 @@
       { "src": "/(.*)", "dest": "/src/index.js" }
     ],
     "env": {
-      "DB_USER": "jramirez",
-      "DB_PASSWORD": "123456",
-      "DB_HOST": "labs-dbservices01.ucab.edu.ve",
-      "DB_DATABASE": "jramirez",
-      "DB_PORT": "5432",
-      "DB_SCHEMA": "ucabair",
-      "PORT": "3000"
+      "DB_USER": "@DB_USER",
+      "DB_PASSWORD": "@DB_PASSWORD",
+      "DB_HOST": "@DB_HOST",
+      "DB_DATABASE": "@DB_DATABASE",
+      "DB_PORT": "@DB_PORT",
+      "DB_SCHEMA": "@DB_SCHEMA",
+      "PORT": "@PORT"
     }
   }
   
