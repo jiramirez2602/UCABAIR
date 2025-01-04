@@ -11,11 +11,13 @@
       { "src": "/(.*)", "dest": "/src/index.js" }
     ],
     "env": {
-      "PGHOST": "@pg_host",
-      "PGUSER": "@pg_user",
-      "PGDATABASE": "@pg_database",
-      "PGPASSWORD": "@pg_password",
-      "PGPORT": "@pg_port"
+      "DB_USER": "@db_user",
+      "DB_PASSWORD": "@db_password",
+      "DB_HOST": "@db_host",
+      "DB_DATABASE": "@db_database",
+      "DB_PORT": "@db_port",
+      "DB_SCHEMA": "@db_schema",
+      "PORT": "@port"
     }
   }
   
