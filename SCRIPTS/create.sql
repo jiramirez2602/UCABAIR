@@ -56,6 +56,7 @@ CREATE TABLE TELEFONO(
     CONSTRAINT fk_posee_pn FOREIGN KEY(Fk_persona_natural) REFERENCES PERSONA_NATURAL(Per_codigo) ON DELETE CASCADE,
     CONSTRAINT fk_posee_pj FOREIGN KEY(Fk_persona_juridica) REFERENCES PERSONA_JURIDICA(Per_codigo) ON DELETE CASCADE
 );
+
 --TODO:Agregar TRIGGER PARA ARCO EXCLUSIVO
 CREATE TABLE CLIENTE(
     Cli_codigo SERIAL,
@@ -217,7 +218,6 @@ CREATE TABLE CARACTERISTICA (
 	CONSTRAINT fk_se_mide_por FOREIGN KEY (Fk_unidad_medida) REFERENCES UNIDAD_MEDIDA(Unm_codigo) ON DELETE CASCADE
 );
 
---TODO: VERIFICAR SI EL CONSTRAINT DE CHECK APLICA PARA EL ATRIBUTO ESTATUS
 CREATE TABLE PIEZA(
 	Pie_codigo SERIAL,
 	Pie_nombre VARCHAR(100) NOT NULL,
@@ -294,17 +294,20 @@ CREATE TABLE ROL(
 	Rol_codigo SERIAL,
 	Rol_nombre VARCHAR(100) NOT NULL,
 	Rol_descripcion VARCHAR(200),
-	CONSTRAINT pk_rol_codigo PRIMARY KEY (Rol_codigo)
+	CONSTRAINT pk_rol_codigo PRIMARY KEY (Rol_codigo), 
+	CONSTRAINT uq_rol_nombre UNIQUE (Rol_nombre)
 );
 
 CREATE TABLE ROL_PRIVILEGIO(
-	Rop_codigo SERIAL,
-	Fk_rol INTEGER NOT NULL,
-	Fk_privilegio INTEGER NOT NULL,
-	CONSTRAINT pk_rop_codigo PRIMARY KEY (Rop_codigo),
-	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_privilegio FOREIGN KEY (Fk_privilegio) REFERENCES PRIVILEGIO(Pri_codigo) ON DELETE CASCADE
+    Rop_codigo SERIAL,
+    Fk_rol INTEGER NOT NULL,
+    Fk_privilegio INTEGER NOT NULL,
+    CONSTRAINT pk_rop_codigo PRIMARY KEY (Rop_codigo),
+    CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo) ON DELETE CASCADE,
+    CONSTRAINT fk_privilegio FOREIGN KEY (Fk_privilegio) REFERENCES PRIVILEGIO(Pri_codigo) ON DELETE CASCADE,
+    CONSTRAINT unique_rol_privilegio UNIQUE (Fk_rol, Fk_privilegio)
 );
+
 
 --TODO: chequear si este arc exclusivo se hace con trigger
 CREATE TABLE USUARIO(
@@ -328,7 +331,8 @@ CREATE TABLE USUARIO_ROL(
 	Fk_rol INTEGER NOT NULL,
 	CONSTRAINT pk_usr_codigo PRIMARY KEY (Usr_codigo),
 	CONSTRAINT fk_usuario FOREIGN KEY (Fk_usuario) REFERENCES USUARIO(Usu_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo) ON DELETE CASCADE
+	CONSTRAINT fk_rol FOREIGN KEY (Fk_rol) REFERENCES ROL(Rol_codigo) ON DELETE CASCADE,
+	CONSTRAINT unique_rol_usuario UNIQUE (Fk_rol, Fk_usuario)
 );
 
 CREATE TABLE CARGO(
@@ -366,7 +370,6 @@ CREATE TABLE MATERIA_PRIMA(
 );
 
 CREATE TABLE INVENTARIO(
---TODO: AGREGAR EL ARCO EXCLUSIVO
 	Inv_codigo SERIAL,
 	Inv_cantidad_disponible INTEGER NOT NULL,
 	Fk_almacen INTEGER NOT NULL,
@@ -375,7 +378,11 @@ CREATE TABLE INVENTARIO(
 	CONSTRAINT pk_inv_codigo PRIMARY KEY (Inv_codigo),
 	CONSTRAINT fk_almacena FOREIGN KEY (Fk_almacen) REFERENCES ALMACEN(Alm_codigo) ON DELETE CASCADE,
 	CONSTRAINT fk_se_almacena FOREIGN KEY (Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_se_deposita FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE
+	CONSTRAINT fk_se_deposita FOREIGN KEY (Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE,
+	CONSTRAINT ck_exclusividad CHECK (
+        (Fk_materia_prima IS NOT NULL AND Fk_pieza IS NULL) OR
+        (Fk_materia_prima IS NULL AND Fk_pieza IS NOT NULL)
+    )
 );
 
 CREATE TABLE SOLICITUD(
@@ -384,12 +391,10 @@ CREATE TABLE SOLICITUD(
 	Sol_fecha_cambio_estatus DATE NOT NULL,
 	Sol_fecha_emision DATE NOT NULL,
 	Sol_cantidad INTEGER NOT NULL,
-	Fk_inventario_1 INTEGER NOT NULL,
-	Fk_inventario_2 INTEGER NOT NULL,
+	Fk_inventario INTEGER NOT NULL,
 	Fk_sede INTEGER NOT NULL,
 	CONSTRAINT pk_sol_codigo PRIMARY KEY(Sol_codigo),
-	CONSTRAINT fk_expide_1 FOREIGN KEY(Fk_inventario_1) REFERENCES INVENTARIO(Inv_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_expide_2 FOREIGN KEY(Fk_inventario_2) REFERENCES INVENTARIO(Inv_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_expide FOREIGN KEY(Fk_inventario) REFERENCES INVENTARIO(Inv_codigo) ON DELETE CASCADE,
 	CONSTRAINT fk_se_origina_en FOREIGN KEY (Fk_sede) REFERENCES SEDE(Sed_codigo) ON DELETE CASCADE
 );
 
@@ -443,8 +448,8 @@ CREATE TABLE VENTA(
 	Ven_fecha_hora TIMESTAMP NOT NULL,
 	Ven_monto_total DOUBLE PRECISION NOT NULL,
 	Ven_impuesto_total DOUBLE PRECISION NOT NULL,
-	Ved_fecha_estimada DATE NOT NULL,
-	Ved_fecha_real DATE,
+	Ven_fecha_estimada DATE NOT NULL,
+	Ven_fecha_real DATE,
 	Fk_cliente INTEGER NOT NULL,
 	Fk_avion INTEGER UNIQUE NOT NULL,
 	CONSTRAINT pk_ven_codigo PRIMARY KEY(Ven_codigo),
@@ -501,7 +506,7 @@ CREATE TABLE VENTA_ESTATUS(
 
 CREATE TABLE PRUEBA(
 	Pru_codigo SERIAL,
-	Pru_nombre VARCHAR(50) NOT NULL,
+	Pru_nombre VARCHAR(100) NOT NULL,
 	Pru_descripcion VARCHAR(250),
 	Pru_duracion_estimada INTEGER NOT NULL,
 	Fk_tipo_pieza INTEGER NOT NULL,
@@ -522,31 +527,31 @@ CREATE TABLE PROCESO_PRUEBA(
 	CONSTRAINT fk_controla FOREIGN KEY(Fk_prueba) REFERENCES PRUEBA(Pru_codigo) ON DELETE CASCADE,
 	CONSTRAINT fk_se_somete FOREIGN KEY(Fk_materia_prima) REFERENCES MATERIA_PRIMA(Mat_codigo) ON DELETE CASCADE,
 	CONSTRAINT fk_ejecuta FOREIGN KEY(Fk_zona) REFERENCES ZONA(Zon_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_es_controlada FOREIGN KEY(Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE
+	CONSTRAINT fk_es_controlada FOREIGN KEY(Fk_pieza) REFERENCES PIEZA(Pie_codigo) ON DELETE CASCADE,
+	CONSTRAINT ck_arco_exclusivo CHECK (
+        (Fk_materia_prima IS NOT NULL AND Fk_pieza IS NULL) OR
+        (Fk_materia_prima IS NULL AND Fk_pieza IS NOT NULL)
+    )
 );
 
 CREATE TABLE PRUEBA_ESTATUS_HISTORICO(
 	Peh_codigo SERIAL NOT NULL,
 	Peh_fecha_inicio DATE NOT NULL,
 	Peh_fecha_fin DATE,
-	Fk_proceso_prueba_1 INTEGER NOT NULL,
-	Fk_proceso_prueba_2 INTEGER NOT NULL,
+	Fk_proceso_prueba INTEGER NOT NULL,
 	Fk_estatus INTEGER NOT NULL,
 	CONSTRAINT pk_peh_codigo PRIMARY KEY(Peh_codigo),
-	CONSTRAINT fk_pasa_por_1 FOREIGN KEY(Fk_proceso_prueba_1) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_pasa_por_2 FOREIGN KEY(Fk_proceso_prueba_2) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
+	CONSTRAINT fk_pasa_por FOREIGN KEY(Fk_proceso_prueba) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
 	CONSTRAINT fk_define FOREIGN KEY(Fk_estatus) REFERENCES ESTATUS(Est_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE ENCARGADO_PRUEBA(
 	Enp_codigo SERIAL NOT NULL,
-	Fk_proceso_prueba_1 INTEGER NOT NULL,
-	Fk_proceso_prueba_2 INTEGER NOT NULL,
+	Fk_proceso_prueba INTEGER NOT NULL,
 	Fk_empleado INTEGER NOT NULL,
 	CONSTRAINT pk_enp_codigo PRIMARY KEY(Enp_codigo),
 	CONSTRAINT fk_se_encarga FOREIGN KEY(Fk_empleado) REFERENCES EMPLEADO(Emp_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_es_encargado_a_1 FOREIGN KEY(Fk_proceso_prueba_1) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE,
-	CONSTRAINT fk_es_encargado_a_2 FOREIGN KEY(Fk_proceso_prueba_2) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE
+	CONSTRAINT fk_es_encargado_a FOREIGN KEY(Fk_proceso_prueba) REFERENCES PROCESO_PRUEBA(Prp_codigo) ON DELETE CASCADE
 );
 
 CREATE TABLE RED_SOCIAL(

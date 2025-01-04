@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Gestión de Roles</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="container mt-4">
+        <a href="../inicio/index.html" class="btn btn-primary me-3">Regresar</a>
+        <h1 class="mb-4">Gestión de Roles👨🏼‍💻👩🏼‍🔧👨🏼‍🏭👷🏼‍♀️</h1>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar roles...">
+            </div>
+            <div class="col-md-2">
+                <input type="number" id="limitInput" class="form-control" placeholder="Límite" value="10">
+            </div>
+            <div class="col-md-4">
+                <button id="searchButton" class="btn btn-primary me-2">Buscar</button>
+                <button id="createButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">Crear Rol</button>
+            </div>
+        </div>
+
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="rol_codigo">Código</th>
+                    <th class="sortable" data-column="rol_nombre">Nombre</th>
+                    <th class="sortable" data-column="rol_descripcion">Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="roleTableBody">
+                <!-- Las filas de la tabla se insertarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <!-- Pagination controls -->
+        <nav>
+            <ul class="pagination justify-content-center" id="paginationContainer">
+                <!-- Pagination items will be inserted here dynamically -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Modal de Creación -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Nuevo Rol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="mb-3">
+                            <label for="createName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="createName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="createDescription" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="createDescription" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear Rol</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Actualización -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Actualizar Rol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateForm">
+                        <input type="hidden" id="updateCode">
+                        <div class="mb-3">
+                            <label for="updateName" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="updateName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateDescription" class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="updateDescription" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar Rol</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

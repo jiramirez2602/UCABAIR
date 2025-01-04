@@ -3,7 +3,7 @@ import {
 } from '../services/tipo_pieza.service.js';
 
 export const getTipoPieza = async (req, res) => {
-  const limit = parseInt(req.query.limit, 10) || 10;
+  const limit = parseInt(req.query.limit, 10) || 999999;
   const page = parseInt(req.query.page, 10) || 1;
   const search = req.query.search || '';
 

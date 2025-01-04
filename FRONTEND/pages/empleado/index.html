@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Empleados</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
 </head>
@@ -13,22 +13,17 @@
     <div class="container mt-4">
         <div class="d-flex align-items-center mb-4">
             <a href="../inicio/index.html" class="btn btn-primary me-3">Regresar</a>
-            <h1 class="mb-0">Gestión de Empleados</h1>
+            <h1 class="mb-0">Gestión de Empleados👷🏼‍♂️</h1>
         </div>
         
         <div class="row mb-4">
             <div class="col-md-6">
                 <input type="text" id="searchInput" class="form-control" placeholder="Buscar empleados...">
             </div>
-            <div class="col-md-3">
-                <select id="limitSelect" class="form-select">
-                    <option value="10">10 registros</option>
-                    <option value="25">25 registros</option>
-                    <option value="50">50 registros</option>
-                    <option value="9999999">Todos los registros</option>
-                </select>
+            <div class="col-md-2">
+                <input type="number" id="limitInput" class="form-control" placeholder="Límite" value="10">
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <button id="searchButton" class="btn btn-primary">Buscar</button>
                 <button id="createButton" class="btn btn-success">Crear Empleado</button>
             </div>
@@ -37,10 +32,11 @@
         <table class="table table-dark table-striped">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Experiencia Profesional</th>
-                    <th>Titulación</th>
-                    <th>Persona Natural</th>
+                    <th class="sortable" data-column="emp_codigo">Código</th>
+                    <th class="sortable" data-column="emp_exp_profesional">Experiencia Profesional</th>
+                    <th class="sortable" data-column="emp_titulacion">Titulación</th>
+                    <th class="sortable" data-column="fk_persona_natural">Persona Natural</th>
+                    <th class="sortable" data-column="usu_nombre">Usuario</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -48,66 +44,51 @@
                 <!-- Table rows will be inserted here dynamically -->
             </tbody>
         </table>
+
+        <!-- Pagination controls -->
+        <nav>
+            <ul class="pagination justify-content-center" id="paginationContainer">
+                <!-- Pagination items will be inserted here dynamically -->
+            </ul>
+        </nav>
     </div>
 
-<!-- Create Modal -->
-<div class="modal fade" id="createModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Crear Nuevo Empleado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createForm">
-                    <div class="mb-3">
-                        <label for="exp_profesional" class="form-label">Experiencia Profesional (años)</label>
-                        <input type="number" class="form-control" id="exp_profesional" name="emp_exp_profesional" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="titulacion" class="form-label">Titulación</label>
-                        <input type="text" class="form-control" id="titulacion" name="emp_titulacion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="fk_persona_natural" class="form-label">Persona Natural</label>
-                        <select class="form-control" id="fk_persona_natural" name="fk_persona_natural" required></select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Crear Empleado</button>
-                </form>
+    <!-- Create Modal -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Nuevo Empleado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="mb-3">
+                            <label for="exp_profesional" class="form-label">Experiencia Profesional (años)</label>
+                            <input type="number" class="form-control" id="exp_profesional" name="exp_profesional" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="titulacion" class="form-label">Titulación</label>
+                            <input type="text" class="form-control" id="titulacion" name="titulacion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fk_persona_natural" class="form-label">ID Persona Natural</label>
+                            <input type="number" class="form-control" id="fk_persona_natural" name="fk_persona_natural" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usu_nombre" class="form-label">Nombre de Usuario</label>
+                            <input type="text" class="form-control" id="usu_nombre" name="usu_nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="usu_contrasena" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="usu_contrasena" name="usu_contrasena" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear Empleado</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<!-- Update Modal -->
-<div class="modal fade" id="updateModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Actualizar Empleado</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="updateForm">
-                    <div class="mb-3">
-                        <label for="updateExpProfesional" class="form-label">Experiencia Profesional (años)</label>
-                        <input type="number" class="form-control" id="updateExpProfesional" name="emp_exp_profesional" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="updateTitulacion" class="form-label">Titulación</label>
-                        <input type="text" class="form-control" id="updateTitulacion" name="emp_titulacion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="updateFkPersonaNatural" class="form-label">Persona Natural</label>
-                        <select class="form-control" id="updateFkPersonaNatural" name="fk_persona_natural" required></select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Actualizar Empleado</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 
     <!-- Update Modal -->
     <div class="modal fade" id="updateModal" tabindex="-1">
@@ -132,6 +113,14 @@
                             <label for="updateFkPersonaNatural" class="form-label">ID Persona Natural</label>
                             <input type="number" class="form-control" id="updateFkPersonaNatural" name="fk_persona_natural" required>
                         </div>
+                        <div class="mb-3">
+                            <label for="updateUsuNombre" class="form-label">Nombre de Usuario</label>
+                            <input type="text" class="form-control" id="updateUsuNombre" name="usu_nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateUsuContrasena" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="updateUsuContrasena" name="usu_contrasena" required>
+                        </div>
                         <button type="submit" class="btn btn-primary">Actualizar Empleado</button>
                     </form>
                 </div>
@@ -143,4 +132,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-

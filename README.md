@@ -12,3 +12,10 @@ El frontend está construido utilizando HTML para la estructura, CSS para el dis
 
 # Creado por:
 Jorge Ramírez, Angelo Di Martino y María Fernanda Bolívar
+
+#TODO:
+1. Mejorar notificaciones
+2. en lista de juridicos y naturales poner nombre de lugar
+3. Agregar en empleado usuario
+4. Evitar que se elimine o actualice el privilegio administrador
+5. Verificar que rol usuario no se puede crear dos veces con el uevo create

@@ -34,6 +34,22 @@ body {
 .table tbody tr:hover {
     background-color: #444444;
 }
+th.sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 1.5rem;
+}
+th.sortable:after {
+    content: '\25b2'; /* Up arrow */
+    position: absolute;
+    right: 0.5rem;
+    color: #ffffff;
+    transition: transform 0.2s ease;
+}
+th.sortable.desc:after {
+    content: '\25bc'; /* Down arrow */
+    transform: rotate(180deg);
+}
 .modal-content {
     background-color: #333333;
     color: #ffffff;

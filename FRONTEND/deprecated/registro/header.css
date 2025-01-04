@@ -1,0 +1,81 @@
+html, body {
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    background-color: #232F3E;
+    padding: 10px 20px;
+    color: white;
+}
+
+.logo-ucabair .logo {
+    width: 100px;
+    height: auto;
+}
+
+.buscador {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+.buscador form {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+}
+
+.buscador .busqueda {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px 0 0 4px;
+}
+
+.buscador button {
+    background-color: #febd69;
+    border: none;
+    padding: 10px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+}
+
+.buscador button:hover {
+    background-color: #d1a55f;
+}
+
+.buscador button img {
+    width: 20px;
+    height: 20px;
+}
+
+.principal ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.principal li {
+    margin: 0 10px;
+}
+
+.principal a {
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.principal a img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+}
+
+.principal a span {
+    font-size: 14px;
+}

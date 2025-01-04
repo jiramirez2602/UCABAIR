@@ -11,17 +11,32 @@ export const getPrueba = async (req, res) => {
   const search = req.query.search || '';
 
   try {
-    const response = await prueba_SR(limit, page, search);
-    res.status(response.status === 'success' ? 200 : 500).json(response);
+    const allPruebas = await prueba_SR(search);
+    
+    // Paginar los resultados
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedPruebas = allPruebas.data.slice(startIndex, endIndex);
+
+    const totalElements = allPruebas.data.length; // Cantidad de elementos de la consulta
+    const totalPages = Math.ceil(totalElements / limit); // Número de páginas
+
+    res.status(allPruebas.status === 'success' ? 200 : 500).json({
+      ...allPruebas,
+      data: paginatedPruebas,
+      totalElements,
+      totalPages,
+    });
   } catch (err) {
     res.status(500).json({
       status: 'error',
-      message: 'Error al obtener l@s pruebas del avión',
+      message: 'Error al obtener l@s pruebas',
       data: [],
       details: err.message,
     });
   }
 };
+
 
 export const createPrueba = async (req, res) => {
   const { nombre, descripcion, duracion_estimada, fk_tipo_pieza } = req.body;

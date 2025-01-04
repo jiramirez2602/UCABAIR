@@ -1,16 +1,23 @@
-const apiUrlPrueba = "http://localhost:3000/prueba";
-const apiUrlTipoPieza = "http://localhost:3000/tipoPieza";
+import { BASE_URL } from '../../config.js';
+const apiUrlPrueba = `${BASE_URL}/prueba`;
+const apiUrlTipoPieza = `${BASE_URL}/tipoPieza`;
 let testTypes = [];
 let testTipoPieza = [];
+let sortColumn = '';
+let sortDirection = 'asc';
+let currentPage = 1;
+let totalPages = 1;
+let limit = 10;
 
 // DOM Elements
 const searchInput = document.getElementById("searchInput");
-const limitSelect = document.getElementById("limitSelect");
+const limitInput = document.getElementById("limitInput");
 const searchButton = document.getElementById("searchButton");
 const createButton = document.getElementById("createButton");
 const testTypeTableBody = document.getElementById("testTypeTableBody");
 const createForm = document.getElementById("createForm");
 const updateForm = document.getElementById("updateForm");
+const paginationContainer = document.getElementById("paginationContainer");
 
 // Bootstrap Modals
 const createModal = new bootstrap.Modal(document.getElementById("createModal"));
@@ -21,7 +28,8 @@ searchButton.addEventListener("click", fetchData);
 createButton.addEventListener("click", () => createModal.show());
 createForm.addEventListener("submit", handleCreate);
 updateForm.addEventListener("submit", handleUpdate);
-limitSelect.addEventListener("change", () => {
+limitInput.addEventListener("change", () => {
+  limit = parseInt(limitInput.value) || 10;
   currentPage = 1;
   fetchData();
 });
@@ -32,18 +40,18 @@ fetchData();
 async function fetchData() {
   try {
     const searchTerm = searchInput.value;
-    const limit = limitSelect.value;
     const responsePrueba = await fetch(
-      `${apiUrlPrueba}?limit=${limit}&page=1&search=${searchTerm}`
+      `${apiUrlPrueba}?limit=${limit}&page=${currentPage}&search=${searchTerm}&sort=${sortColumn}&direction=${sortDirection}`
     );
     const responseTipoPieza = await fetch(
-      `${apiUrlTipoPieza}?limit=${limit}&page=1&search=${searchTerm}`
+      `${apiUrlTipoPieza}?limit=${limit}&page=${currentPage}&search=${searchTerm}`
     );
     const data = await responsePrueba.json();
     const dataTipoPieza = await responseTipoPieza.json();
     if (data.status === "success" && dataTipoPieza.status === "success") {
       testTypes = data.data;
       testTipoPieza = dataTipoPieza.data;
+      totalPages = data.totalPages;
 
       // Integrar nombres de tipo de pieza en los datos de prueba
       testTypes.forEach((prueba) => {
@@ -57,6 +65,7 @@ async function fetchData() {
 
       renderTable();
       setupComboBoxes();
+      renderPagination();
     } else {
       console.error(
         "Error al obtener datos:",
@@ -106,7 +115,18 @@ function renderOptions(optionsList, options, hiddenInput, searchInput) {
 
 function renderTable() {
   testTypeTableBody.innerHTML = "";
-  testTypes.forEach((testType) => {
+  const sortedTestTypes = [...testTypes].sort((a, b) => {
+    if (sortColumn) {
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    }
+    return 0;
+  });
+
+  sortedTestTypes.forEach((testType) => {
     const row = document.createElement("tr");
     row.innerHTML = `
             <td>${testType.pru_codigo}</td>
@@ -135,6 +155,42 @@ function renderTable() {
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", () => handleDelete(btn.dataset.id));
   });
+}
+
+// Add event listeners to sortable columns
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const column = th.dataset.column;
+    if (sortColumn === column) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortColumn = column;
+      sortDirection = 'asc';
+    }
+    document.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc'));
+    if (sortDirection === 'desc') {
+      th.classList.add('desc');
+    }
+    fetchData();
+  });
+});
+
+function renderPagination() {
+  paginationContainer.innerHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const pageItem = document.createElement('li');
+    pageItem.classList.add('page-item');
+    if (i === currentPage) {
+      pageItem.classList.add('active');
+    }
+    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+    pageItem.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentPage = i;
+      fetchData();
+    });
+    paginationContainer.appendChild(pageItem);
+  }
 }
 
 async function handleCreate(event) {

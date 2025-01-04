@@ -1,73 +1,98 @@
-import { pool } from '../db.js';
+import { pool } from "../db.js";
 
-export const obtenerEmpleados_SR = async (limit, page, search) => {
+export const obtenerEmpleadosConUsuarios_SR = async (search) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM leer_empleados($1, $2, $3)",
-      [limit, page, search]
+      "SELECT * FROM leer_empleados_con_usuarios($1)",
+      [search]
     );
     return {
-      status: 'success',
-      message: "Empleados obtenidos con éxito",
+      status: "success",
+      message: "Empleados con usuarios obtenidos con éxito",
       data: result.rows,
       details: "",
     };
   } catch (error) {
     return {
-      status: 'error',
-      message: 'Error al obtener los empleados',
+      status: "error",
+      message: "Error al obtener los empleados con usuarios",
       data: [],
-      details: error.message
+      details: error.message,
     };
   }
 };
 
-export const crearEmpleado_SC = async (exp_profesional, titulacion, fk_persona_natural) => {
+export const crearEmpleadoConUsuario_SC = async (
+  exp_profesional,
+  titulacion,
+  fk_persona_natural,
+  usu_nombre,
+  usu_contrasena
+) => {
   try {
     const { rows } = await pool.query(
-      "CALL crear_empleado($1, $2, $3)",
-      [exp_profesional, titulacion, fk_persona_natural]
+      "CALL crear_empleado_con_usuario($1, $2, $3, $4, $5)",
+      [
+        exp_profesional,
+        titulacion,
+        fk_persona_natural,
+        usu_nombre,
+        usu_contrasena,
+      ]
     );
     return {
-      status: 'success',
-      message: "Empleado creado exitosamente",
+      status: "success",
+      message: "Empleado con usuario creado exitosamente",
       data: rows[0],
       details: "",
     };
   } catch (error) {
     return {
-      status: 'error',
-      message: 'Error al crear el empleado',
+      status: "error",
+      message: "Error al crear el empleado con usuario",
       data: [],
-      details: error.message
+      details: error.message,
     };
   }
 };
 
-export const actualizarEmpleado_SU = async (codigo, exp_profesional, titulacion, fk_persona_natural) => {
+export const actualizarEmpleadoConUsuario_SU = async (
+  codigo,
+  exp_profesional,
+  titulacion,
+  fk_persona_natural,
+  usu_nombre,
+  usu_contrasena
+) => {
   try {
     const { rows } = await pool.query(
-      "CALL actualizar_empleado($1, $2, $3, $4)",
-      [codigo, exp_profesional, titulacion, fk_persona_natural]
+      "CALL actualizar_empleado_con_usuario($1, $2, $3, $4, $5, $6)",
+      [
+        codigo,
+        exp_profesional,
+        titulacion,
+        fk_persona_natural,
+        usu_nombre,
+        usu_contrasena,
+      ]
     );
     return {
-      status: 'success',
-      message: "Empleado actualizado exitosamente",
+      status: "success",
+      message: "Empleado con usuario actualizado exitosamente",
       data: rows[0],
       details: "",
     };
   } catch (error) {
     return {
-      status: 'error',
-      message: 'Error al actualizar el empleado',
+      status: "error",
+      message: "Error al actualizar el empleado con usuario",
       data: [],
-      details: error.message
+      details: error.message,
     };
   }
 };
 
-
-export const eliminarEmpleado_SD = async (id) => {
+export const eliminarEmpleadoConUsuario_SD = async (id) => {
   try {
     // Verificación de la existencia del registro
     const checkResult = await pool.query(
@@ -76,25 +101,27 @@ export const eliminarEmpleado_SD = async (id) => {
     );
     if (checkResult.rowCount === 0) {
       return {
-        status: 'error',
+        status: "error",
         message: "El empleado con el ID proporcionado no existe",
         data: [],
         details: "",
       };
     }
-    const result = await pool.query("CALL eliminar_empleado($1)", [id]);
+    const result = await pool.query("CALL eliminar_empleado_con_usuario($1)", [
+      id,
+    ]);
     return {
-      status: 'success',
-      message: "Empleado eliminado exitosamente",
+      status: "success",
+      message: "Empleado con usuario eliminado exitosamente",
       data: result.rowCount > 0 ? result.rows[0] : null,
       details: "",
     };
   } catch (error) {
     return {
-      status: 'error',
-      message: 'Error al eliminar el empleado',
+      status: "error",
+      message: "Error al eliminar el empleado con usuario",
       data: [],
-      details: error.message
+      details: error.message,
     };
   }
 };

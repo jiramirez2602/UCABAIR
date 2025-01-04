@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="container mt-4">
+        <div class="d-flex align-items-center mb-4">
+            <a href="../inicio/index.html" class="btn btn-primary me-3">Regresar</a>
+            <h1 class="mb-0">Proveedores📦</h1>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar Proveedores...">
+            </div>
+            <div class="col-md-2">
+                <input type="number" id="limitInput" class="form-control" placeholder="Límite" value="10">
+            </div>
+            <div class="col-md-4">
+                <button id="searchButton" class="btn btn-primary">Buscar</button>
+                <button id="createButton" class="btn btn-success">Crear</button>
+            </div>
+        </div>
+
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th class="sortable" data-column="per_codigo">Código</th>
+                    <th class="sortable" data-column="per_nombre">Nombre</th>
+                    <th class="sortable" data-column="per_identificacion">Identificación</th>
+                    <th class="sortable" data-column="per_direccion">Dirección</th>
+                    <th class="sortable" data-column="per_fecha_registro">Fecha Registro</th>
+                    <th class="sortable" data-column="pej_pagina_web">Página Web</th>
+                    <th class="sortable" data-column="fk_lugar">Lugar</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Table rows will be inserted here dynamically -->
+            </tbody>
+        </table>
+
+        <!-- Pagination controls -->
+        <nav>
+            <ul class="pagination justify-content-center" id="paginationContainer">
+                <!-- Pagination items will be inserted here dynamically -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Modal de Creación -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Crear Persona Jurídica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="identificacion" class="form-label">Identificación</label>
+                            <input type="text" class="form-control" id="identificacion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="direccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="direccion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha_registro" class="form-label">Fecha de Registro</label>
+                            <input type="date" class="form-control" id="fecha_registro" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="pagina_web" class="form-label">Página Web</label>
+                            <input type="url" class="form-control" id="pagina_web" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="createEstado" class="form-label">Estado</label>
+                            <select id="createEstado" class="form-select" required>
+                                <option value="">Seleccione un Estado</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="createMunicipio" class="form-label">Municipio</label>
+                            <select id="createMunicipio" class="form-select" required disabled>
+                                <option value="">Seleccione un Municipio</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="createParroquia" class="form-label">Parroquia</label>
+                            <select id="createParroquia" class="form-select" required disabled>
+                                <option value="">Seleccione una Parroquia</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Crear</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Actualización -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Actualizar Persona Jurídica</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateForm">
+                        <input type="hidden" id="updateCodigo">
+                        <div class="mb-3">
+                            <label for="updateNombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="updateNombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateIdentificacion" class="form-label">Identificación</label>
+                            <input type="text" class="form-control" id="updateIdentificacion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateDireccion" class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="updateDireccion" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateFechaRegistro" class="form-label">Fecha de Registro</label>
+                            <input type="date" class="form-control" id="updateFechaRegistro" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updatePaginaWeb" class="form-label">Página Web</label>
+                            <input type="url" class="form-control" id="updatePaginaWeb" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateEstado" class="form-label">Estado</label>
+                            <select id="updateEstado" class="form-select" required>
+                                <option value="">Seleccione un Estado</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateMunicipio" class="form-label">Municipio</label>
+                            <select id="updateMunicipio" class="form-select" required disabled>
+                                <option value="">Seleccione un Municipio</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updateParroquia" class="form-label">Parroquia</label>
+                            <select id="updateParroquia" class="form-select" required disabled>
+                                <option value="">Seleccione una Parroquia</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

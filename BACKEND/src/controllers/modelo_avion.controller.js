@@ -6,13 +6,27 @@ import {
 } from '../services/modelo_avion.service.js';
 
 export const getModeloAviones = async (req, res) => {
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const page = parseInt(req.query.page, 10) || 1;
   const search = req.query.search || '';
+  const limit = parseInt(req.query.limit, 10) || 10; // Valor predeterminado 10
+  const page = parseInt(req.query.page, 10) || 1; // Valor predeterminado 1
 
   try {
-    const response = await modeloAvion_SR(limit, page, search);
-    res.status(response.status === 'success' ? 200 : 500).json(response);
+    const allModelos = await modeloAvion_SR(search);
+    
+    // Paginar los resultados
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedModelos = allModelos.data.slice(startIndex, endIndex);
+
+    const totalElements = allModelos.data.length; // Cantidad de elementos de la consulta
+    const totalPages = Math.ceil(totalElements / limit); // Número de páginas
+
+    res.status(allModelos.status === 'success' ? 200 : 500).json({
+      ...allModelos,
+      data: paginatedModelos,
+      totalElements,
+      totalPages,
+    });
   } catch (err) {
     res.status(500).json({
       status: 'error',

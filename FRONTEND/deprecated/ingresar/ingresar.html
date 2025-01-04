@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es-VE">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" href="../../resources/logo.png" type="image/png">
+        <link rel="stylesheet" href="./header.css">
+        <link rel="stylesheet" href="./pasos.css">
+        <link rel="stylesheet" href="./base.css">
+        <title>Iniciar Sesión</title>
+    </head>
+    <body>
+        <header class="header">
+            <section class="logo-ucabair">
+                <img src="..\..\resources\logo.png" alt="UCABAIR" class="logo">
+            </section>
+            <section class="buscador">
+                <form>
+                    <input type="text" id="busqueda" class="busqueda" placeholder="Buscar marcas, modelos y más...">
+                    <button><img src="..\..\resources\icono_lupa.png" alt="Buscar"></button>
+                </form>
+            </section>
+            <nav class="principal">
+                <ul>
+                    <li><a href=''><img src="../../resources/lugar.png" alt="Destino"><span id="destino">Ubicación</span></a></li>
+                    <li><a href="../flota_de_corretaje/flota_de_corretaje.html"><span>Flota de Corretaje</span></a></li>
+                    <li><a href=''><span id="nobre_perfil">Cuenta</span></a></li>
+                    <li><a href="../ingresar/ingresar.html"><span>Ingresar</span></a></li>
+                    <li><a href='../registro/registro.html'><span>Registrarse</span></a></li>
+                    <li><a href=''><span>Pedidos</span></a></li>
+                    <li><a href='../administracion/administracion.html'><span>Administración</span></a></li>
+                    <li><a href=''><span>Contáctenos</span></a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="paso_1" class="pasos">
+                <h1>Ingresa tu e-mail y contraseña</h1>
+                <form>
+                    <h5>E-mail</h5>
+                    <input type="text" class="input" placeholder="ejemplo@gmail.com">
+                    <h5>Contraseña</h5>
+                    <input type="text" class="input" placeholder="********">
+                    <button class="btn btn_pasos"><label class="btn">Continuar</label></button>
+                </form>
+                   <a class="enlace" href=''>¿Se le olvidó su contraseña?</a>
+            </section>
+            <section id="paso_2" class="pasos">
+                <h1>Ingesa el código que te enviamos por e-mail</h1>
+                <p>Lo enviamos a "<span id="correo-ingresado"> </span>". Si no lo encuentras haz click en reenviar.</p>
+                <form>
+                    <input type="text" id="codigo_1" class="input digito" placeholder="0">
+                    <input type="text" id="codigo_2" class="input digito" placeholder="0">
+                    <input type="text" id="codigo_3" class="input digito" placeholder="0">
+                    <input type="text" id="codigo_4" class="input digito" placeholder="0">
+                    <button class="btn_pasos btn-reenviar"><label class="reenviar">Reenviar código</label></button>
+                    <button class="btn_pasos btn-confirmar"><label class="btn">Confirmar código</label></button>
+                </form>
+                <button class="btn_pasos btn_regresar"><label class="regresar">Regresar</label></button>
+            </section>
+        </main>
+    </body>
+</html>

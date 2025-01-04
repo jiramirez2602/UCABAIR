@@ -1,10 +1,8 @@
 import { pool } from "../db.js";
 
-export const prueba_SR = async (limit, page, search) => {
+export const prueba_SR = async (search) => {
   try {
-    const result = await pool.query("SELECT * FROM leer_pruebas($1, $2, $3)", [
-      limit,
-      page,
+    const result = await pool.query("SELECT * FROM leer_pruebas($1)", [
       search,
     ]);
     return {
@@ -22,6 +20,7 @@ export const prueba_SR = async (limit, page, search) => {
     };
   }
 };
+
 
 export const prueba_SC = async (
   nombre,

@@ -7,9 +7,7 @@ Arrancar app desde consola:
 3. Ingresar a: http://192.168.0.103:8080 o  http://127.0.0.1:8080
 
 Usuarios:
-1. Username: admin, Password: admin123
-2. Username: manager, Password: manager123
-3. Username: worker, Password: worker123
+1. Username: admin, Password: 123
 
 El menú mostrará diferentes opciones según el rol del usuario:
 
@@ -20,3 +18,4 @@ El menú mostrará diferentes opciones según el rol del usuario:
 Cada elemento del menú se vinculará a su página respectiva en la carpeta "páginas".
 
 Recuerde que esta es una implementación solo del lado del cliente con fines de demostración. En un escenario del mundo real, necesitaría implementar la autenticación y autorización adecuadas del lado del servidor para garantizar la seguridad.
+

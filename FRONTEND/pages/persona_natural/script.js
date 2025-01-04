@@ -1,5 +1,6 @@
-const apiUrl = "http://localhost:3000/personasNaturales";
-const lugarApiUrl = "http://localhost:3000/lugar";
+import { BASE_URL } from '../../config.js';
+const apiUrl = `${BASE_URL}/personasNaturales`;
+const lugarApiUrl = `${BASE_URL}/lugar`;
 let personas = [];
 
 // DOM Elements

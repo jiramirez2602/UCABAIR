@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es-VE">
+    <head>
+        <link rel="icon" href="../../resources/logo.png" type="image/png">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="./header.css">
+        <link rel="stylesheet" href="./pasos.css">
+        <link rel="stylesheet" href="./base.css">
+        <title>Iniciar Sesión</title>
+    </head>
+    <body>
+        <header class="header">
+            <section class="logo-ucabair">
+                <img src="..\..\resources\logo.png" alt="UCABAIR" class="logo">
+            </section>
+            <section class="buscador">
+                <form>
+                    <input type="text" id="busqueda" class="busqueda" placeholder="Buscar marcas, modelos y más...">
+                    <button><img src="..\..\resources\icono_lupa.png" alt="Buscar"></button>
+                </form>
+            </section>
+            <nav class="principal">
+                <ul>
+                    <li><a href=''><img src="../../resources/lugar.png" alt="Destino"><span id="destino">Ubicación</span></a></li>
+                    <li><a href="../flota_de_corretaje/flota_de_corretaje.html"><span>Flota de Corretaje</span></a></li>
+                    <li><a href=''><span id="nobre_perfil">Cuenta</span></a></li>
+                    <li><a href="../ingresar/ingresar.html"><span>Ingresar</span></a></li>
+                    <li><a href='../registro/registro.html'><span>Registrarse</span></a></li>
+                    <li><a href=''><span>Pedidos</span></a></li>
+                    <li><a href='../administracion/administracion.html'><span>Administración</span></a></li>
+                    <li><a href=''><span>Contáctenos</span></a></li>
+                </ul>
+            </nav>
+        </header>
+        <main>
+            <section id="paso_1" class="pasos" style="display: block;">
+                <h1>Ingresa tu e-mail</h1>
+                <h5>Correo electrónico</h5>
+                <form id="formCorreo" onsubmit="siguientePaso(event)" method="post">
+                    <input type="email" id="correo" class="input" placeholder="ejemplo@gmail.com" required>
+                    <button type="submit" class="btn_pasos"><label class="btn">Continuar</label></button>
+                </form>
+            </section>
+            <section id="paso_2" class="pasos" style="display: none;">
+                <h1>Ingresa tu nombre de usuario</h1>
+                <h5>Nombre de usuario</h5>
+                <form id="formUsuario" onsubmit="siguientePaso(event)" method="post">
+                    <input type="text" id="usuario" class="input" placeholder="UsuarioEjemplo" required>
+                    <button type="submit" class="btn_pasos"><label class="btn">Continuar</label></button>
+                </form>
+                <button class="btn_pasos btn_regresar"onclick="pasoAnterior()"><label class="regresar">Regresar</label></button>
+            </section>
+            <section id="paso_3" class="pasos" style="display: none;">
+                <h1>Ingresa tu nombre y apellido</h1>
+                <form id="formDatos" onsubmit="siguientePaso(event)" method="post">
+                    <h5>Primer nombre</h5>
+                    <input type="text" class="input datos" placeholder="Ingrese su nombre" required>
+                    <h5>Segundo nombre</h5>
+                    <input type="text" class="input datos" placeholder="Opcional">
+                    <h5>Primer apellido</h5>
+                    <input type="text" class="input datos" placeholder="Ingrese su apellido" required>
+                    <h5>Segundo apellido</h5>
+                    <input type="text" class="input" placeholder="Opcional">
+                    <button type="submit" class="btn_pasos"><label class="btn">Continuar</label></button>
+                </form>
+                <button class="btn_pasos btn_regresar"onclick="pasoAnterior()"><label class="regresar">Regresar</label></button>
+            </section>
+            <section id="paso_4" class="pasos"style="display: none;">
+                <h1>Ingresa tu teléfono</h1>
+                <form id="formTelefono" onsubmit="siguientePaso(event)" method="post">
+                    <h5>Teléfono</h5>
+                    <input type="text" class="input" placeholder="+58 " required>
+                    <p class="info">- Código de área + número</p>
+                    <button class="btn_pasos"><label class="btn">Continuar</label></button>
+                </form>
+                <button class="btn_pasos btn_regresar"onclick="pasoAnterior()"><label class="regresar">Regresar</label></button>
+            </section>
+            <section id="paso_5" class="pasos"style="display: none;">
+                <h1>Crea tu contraseña</h1>
+                <p>Ingresa una contraseña segura que no hayas usado en otra plataforma.</p>
+                <form id="formContrasena" method="post">
+                    <h5>Contraseña</h5>
+                    <input type="password" class="input" placeholder="********" required>
+                    <h5>Confirma tu contraseña</h5>
+                    <input type="password" class="input" placeholder="********" required>
+                    <p class="info">- Mínimo 8 caracteres y al menos un número.</p>
+                    <button class="btn_pasos"><label class="btn">Continuar</label></button>
+                </form>
+                <button class="btn_pasos btn_regresar"onclick="pasoAnterior()"><label class="regresar">Regresar</label></button>
+            </section>
+        </main>
+        <script src="gestionar_pasos.js"></script>
+    </body>
+</html>

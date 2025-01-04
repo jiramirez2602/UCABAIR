@@ -1,10 +1,10 @@
 import { pool } from '../db.js';
 
-export const modeloAvion_SR = async (limit, page, search) => {
+export const modeloAvion_SR = async (search) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM leer_modelos_avion($1, $2, $3)",
-      [limit, page, search]
+      "SELECT * FROM leer_modelos_avion($1)",
+      [search]
     );
     return {
       status: 'success',
@@ -21,6 +21,7 @@ export const modeloAvion_SR = async (limit, page, search) => {
     };
   }
 };
+
 
 export const modeloAvion_SC = async (nombre, descripcion, longitud, envergadura, altura, peso_vacio) => {
   try {

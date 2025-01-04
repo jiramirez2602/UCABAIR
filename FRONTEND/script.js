@@ -1,35 +1,30 @@
-// Simulated user roles and privileges
-const userRoles = {
-    admin: ['modelo_avion', 'prueba', 'persona_natural', 'empleado'],
-    manager: ['purchase', 'sale'],
-    worker: ['manufacturing']
-};
-
-// Simulated user database
-const users = {
-    admin: { password: 'admin123', role: 'admin' },
-    manager: { password: 'manager123', role: 'manager' },
-    worker: { password: 'worker123', role: 'worker' }
-};
-
 // Login form submission
+import { BASE_URL } from './config.js';
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
-    loginForm.addEventListener('submit', function(e) {
+    loginForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
-        if (users[username] && users[username].password === password) {
-            localStorage.setItem('currentUser', JSON.stringify({ username, role: users[username].role }));
-            window.location.href = 'pages/inicio/index.html';
-        } else {
-            alert('Usuario o contraseña inválidos');
+        try {
+            const response = await fetch(`${BASE_URL}/login?username=${username}&password=${password}`);
+            const data = await response.json();
+
+            if (data.status === 'success') {
+                localStorage.setItem('currentUser', JSON.stringify({ username, privileges: data.data }));
+                window.location.href = 'pages/inicio/index.html';
+            } else {
+                alert('Usuario o contraseña inválidos');
+            }
+        } catch (error) {
+            alert('Error al iniciar sesión. Por favor, intente nuevamente.');
+            console.error('Error:', error);
         }
     });
 }
 
-// Generate menu based on user role
+// Generate menu based on user privileges
 function generateMenu() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     if (!currentUser) {
@@ -39,15 +34,14 @@ function generateMenu() {
 
     const menu = document.getElementById('menu');
     if (menu) {
-        const userPrivileges = userRoles[currentUser.role];
+        const userPrivileges = currentUser.privileges;
         userPrivileges.forEach(privilege => {
             const li = document.createElement('li');
             li.className = 'nav-item';
             const a = document.createElement('a');
             a.className = 'nav-link';
-            a.href = `../${privilege}/index.html`;
-            a.textContent = privilege.charAt(0).toUpperCase() + privilege.slice(1);
-            a.textContent = a.textContent.replace(/_/g, " ");
+            a.href = `../${privilege.pri_nombre}/index.html`;
+            a.textContent = privilege.pri_nombre.charAt(0).toUpperCase() + privilege.pri_nombre.slice(1).replace(/_/g, " ");
             li.appendChild(a);
             menu.appendChild(li);
         });

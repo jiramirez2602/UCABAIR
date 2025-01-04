@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Roles y Privilegios</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Gestión de Roles y Privilegios 🔐</h1>
+        
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Buscar asignaciones...">
+            </div>
+            <div class="col-md-3">
+                <select id="limitSelect" class="form-select">
+                    <option value="10">10 registros</option>
+                    <option value="25">25 registros</option>
+                    <option value="50">50 registros</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button id="searchButton" class="btn btn-primary me-2">Buscar</button>
+                <button id="createButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#createModal">
+                    Asignar Privilegio
+                </button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-dark table-striped">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Rol</th>
+                        <th>Privilegio</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="rolPrivilegioTableBody">
+                    <!-- Datos dinámicos aquí -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Creación -->
+    <div class="modal fade" id="createModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Asignar Nuevo Privilegio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="createForm">
+                        <div class="mb-3">
+                            <label for="rolSelect" class="form-label">Rol</label>
+                            <select class="form-select" id="rolSelect" required>
+                                <!-- Opciones dinámicas -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="privilegioSelect" class="form-label">Privilegio</label>
+                            <select class="form-select" id="privilegioSelect" required>
+                                <!-- Opciones dinámicas -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Asignar Privilegio</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Actualización -->
+    <div class="modal fade" id="updateModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Actualizar Asignación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updateForm">
+                        <input type="hidden" id="updateCode">
+                        <div class="mb-3">
+                            <label for="updateRolSelect" class="form-label">Rol</label>
+                            <select class="form-select" id="updateRolSelect" required>
+                                <!-- Opciones dinámicas -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="updatePrivilegioSelect" class="form-label">Privilegio</label>
+                            <select class="form-select" id="updatePrivilegioSelect" required>
+                                <!-- Opciones dinámicas -->
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Actualizar Asignación</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
