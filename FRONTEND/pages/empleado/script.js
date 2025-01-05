@@ -72,7 +72,7 @@ function renderTable() {
             <td>${employee.emp_codigo}</td>
             <td>${employee.emp_exp_profesional} años</td>
             <td>${employee.emp_titulacion}</td>
-            <td>${employee.fk_persona_natural}</td>
+            <td>${employee.persona_natural_nombre}</td>
             <td>${employee.usu_nombre}</td>
             <td>
                 <div class="d-flex gap-2">

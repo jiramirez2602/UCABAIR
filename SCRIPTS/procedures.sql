@@ -556,7 +556,19 @@ CREATE OR REPLACE FUNCTION leer_personas_natural(
     p_limit INT DEFAULT 10,
     p_page INT DEFAULT 1,
     p_search VARCHAR DEFAULT ''
-) RETURNS SETOF PERSONA_NATURAL
+) RETURNS TABLE(
+    Per_codigo INT,
+    Per_nombre VARCHAR,
+    Per_direccion TEXT,
+    Per_fecha_registro DATE,
+    Per_identificacion VARCHAR,
+    Pen_segundo_nombre VARCHAR,
+    Pen_primer_apellido VARCHAR,
+    Pen_segundo_apellido VARCHAR,
+    Pen_fecha_nac DATE,
+    fk_lugar INT,
+    Lug_nombre VARCHAR
+)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -581,12 +593,16 @@ BEGIN
     -- Intentar ejecutar la consulta
     BEGIN
         RETURN QUERY
-        SELECT *
-        FROM PERSONA_NATURAL
-        WHERE (p_search = '' OR Per_nombre ILIKE '%' || p_search || '%' 
-                           OR Pen_primer_apellido ILIKE '%' || p_search || '%'
-                           OR Pen_segundo_apellido ILIKE '%' || p_search || '%'
-                           OR Per_identificacion ILIKE '%' || p_search || '%')
+        SELECT P.Per_codigo, P.Per_nombre, P.Per_direccion, P.Per_fecha_registro, P.Per_identificacion,
+               P.Pen_segundo_nombre, P.Pen_primer_apellido, P.Pen_segundo_apellido, P.Pen_fecha_nac, 
+               P.Fk_lugar, L.Lug_nombre
+        FROM PERSONA_NATURAL P
+        INNER JOIN LUGAR L ON P.Fk_lugar = L.Lug_codigo
+        WHERE (p_search = '' OR P.Per_nombre ILIKE '%' || p_search || '%' 
+                           OR P.Pen_primer_apellido ILIKE '%' || p_search || '%'
+                           OR P.Pen_segundo_apellido ILIKE '%' || p_search || '%'
+                           OR P.Per_identificacion ILIKE '%' || p_search || '%'
+                           OR L.Lug_nombre ILIKE '%' || p_search || '%')
         LIMIT p_limit
         OFFSET p_offset;
     EXCEPTION
@@ -595,6 +611,7 @@ BEGIN
     END;
 END;
 $$;
+
 --SELECT * FROM leer_personas_natural();
 
 --UPDATE
@@ -828,7 +845,8 @@ CREATE OR REPLACE FUNCTION leer_empleados_con_usuarios(
     emp_titulacion VARCHAR,
     fk_persona_natural INT,
     usu_nombre VARCHAR,
-    usu_contrasena VARCHAR
+    usu_contrasena VARCHAR,
+    persona_natural_nombre VARCHAR
 ) LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -840,12 +858,14 @@ BEGIN
     -- Intentar ejecutar la consulta
     RETURN QUERY
     SELECT e.emp_codigo, e.emp_exp_profesional, e.emp_titulacion, e.fk_persona_natural,
-           u.usu_nombre, u.usu_contrasena
+           u.usu_nombre, u.usu_contrasena, p.per_nombre AS nombre_completo
     FROM EMPLEADO e
     JOIN USUARIO u ON e.emp_codigo = u.fk_empleado
+    JOIN PERSONA_NATURAL p ON p.per_codigo =  e.fk_persona_natural
     WHERE (p_search = '' OR e.emp_titulacion ILIKE '%' || p_search || '%'
                             OR CAST(e.emp_exp_profesional AS VARCHAR) ILIKE '%' || p_search || '%'
-                            OR u.usu_nombre ILIKE '%' || p_search || '%');
+                            OR u.usu_nombre ILIKE '%' || p_search || '%'
+							OR p.per_nombre ILIKE '%' || p_search || '%');		
 
 EXCEPTION
     WHEN OTHERS THEN
@@ -853,7 +873,8 @@ EXCEPTION
 END;
 $$;
 
---SELECT * FROM leer_empleados_con_usuarios(10, 1, 'Ingeniero');
+--SELECT * FROM leer_empleados_con_usuarios();
+
 
 
 --UPDATE
@@ -1051,7 +1072,16 @@ CREATE OR REPLACE FUNCTION leer_personas_juridicas(
     p_limit INT DEFAULT 10,
     p_page INT DEFAULT 1,
     p_search VARCHAR DEFAULT ''
-) RETURNS SETOF PERSONA_JURIDICA
+) RETURNS TABLE(
+    Per_codigo INT,
+    Per_nombre VARCHAR,
+    Per_direccion TEXT,
+    Per_fecha_registro DATE,
+    Per_identificacion VARCHAR,
+    Pej_pagina_web VARCHAR,
+    fk_lugar INT,
+    Lug_nombre VARCHAR
+)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -1076,12 +1106,15 @@ BEGIN
     -- Intentar ejecutar la consulta
     BEGIN
         RETURN QUERY
-        SELECT * 
-        FROM PERSONA_JURIDICA 
-        WHERE (p_search = '' OR Per_nombre ILIKE '%' || p_search || '%' 
-                                OR Per_direccion ILIKE '%' || p_search || '%'
-                                OR Per_identificacion ILIKE '%' || p_search || '%'
-                                OR Pej_pagina_web ILIKE '%' || p_search || '%')
+        SELECT P.Per_codigo, P.Per_nombre, P.Per_direccion, P.Per_fecha_registro, P.Per_identificacion,
+               P.Pej_pagina_web, P.Fk_lugar, L.Lug_nombre
+        FROM PERSONA_JURIDICA P
+        INNER JOIN LUGAR L ON P.Fk_lugar = L.Lug_codigo
+        WHERE (p_search = '' OR P.Per_nombre ILIKE '%' || p_search || '%' 
+                           OR P.Per_direccion ILIKE '%' || p_search || '%'
+                           OR P.Per_identificacion ILIKE '%' || p_search || '%'
+                           OR P.Pej_pagina_web ILIKE '%' || p_search || '%'
+                           OR L.Lug_nombre ILIKE '%' || p_search || '%')
         LIMIT p_limit 
         OFFSET p_offset;
     EXCEPTION
@@ -1090,7 +1123,8 @@ BEGIN
     END;
 END;
 $$;
---SELECT * FROM leer_personas_juridicas(10, 1, 'Empresa');
+
+--SELECT * FROM leer_personas_juridicas();
 
 --UPDATE
 CREATE OR REPLACE PROCEDURE actualizar_persona_juridica(
@@ -1216,7 +1250,16 @@ $$;
 --READ
 CREATE OR REPLACE FUNCTION leer_proveedor(
     p_search VARCHAR DEFAULT ''
-) RETURNS SETOF PERSONA_JURIDICA
+) RETURNS TABLE(
+    Per_codigo INT,
+    Per_nombre VARCHAR,
+    Per_direccion TEXT,
+    Per_fecha_registro DATE,
+    Per_identificacion VARCHAR,
+    Pej_pagina_web VARCHAR,
+    fk_lugar INT,
+    Lug_nombre VARCHAR
+)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -1227,12 +1270,15 @@ BEGIN
 
     -- Intentar ejecutar la consulta
     RETURN QUERY
-    SELECT * 
+    SELECT pj.Per_codigo, pj.Per_nombre, pj.Per_direccion, pj.Per_fecha_registro, pj.Per_identificacion,
+           pj.Pej_pagina_web, pj.Fk_lugar, l.Lug_nombre
     FROM persona_juridica pj
-    WHERE (p_search = '' OR pj.Per_nombre ILIKE '%' || p_search || '%' 
-                            OR pj.Per_direccion ILIKE '%' || p_search || '%'
-                            OR pj.Per_identificacion ILIKE '%' || p_search || '%'
-                            OR pj.Pej_pagina_web ILIKE '%' || p_search || '%')
+    INNER JOIN lugar l ON pj.Fk_lugar = l.Lug_codigo
+    WHERE (p_search = '' OR pj.Per_nombre ILIKE '%' || p_search || '%'
+                           OR pj.Per_direccion ILIKE '%' || p_search || '%'
+                           OR pj.Per_identificacion ILIKE '%' || p_search || '%'
+                           OR pj.Pej_pagina_web ILIKE '%' || p_search || '%'
+                           OR l.Lug_nombre ILIKE '%' || p_search || '%')
     AND pj.Per_codigo IN (SELECT fk_persona_juridica FROM proveedor_tipo_materia);
 
 EXCEPTION
@@ -1240,6 +1286,7 @@ EXCEPTION
         RAISE EXCEPTION 'Ocurrió un error al ejecutar la consulta: %', SQLERRM;
 END;
 $$;
+
 
 
 --SELECT * FROM leer_proveedor();
@@ -1522,6 +1569,10 @@ BEGIN
     -- Validaciones de entrada
     IF p_codigo IS NULL THEN
         RAISE EXCEPTION 'Error: El código no puede ser NULL.';
+    END IF;
+    
+    IF p_codigo = 1 THEN
+        RAISE EXCEPTION 'El rol administrador no se puede eliminar';
     END IF;
 
     -- Intentar eliminar el registro

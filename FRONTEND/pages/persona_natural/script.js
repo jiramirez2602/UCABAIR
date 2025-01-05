@@ -133,7 +133,7 @@ function renderTable() {
       <td>${persona.per_direccion}</td>
       <td>${persona.pen_fecha_nac}</td>
       <td>${persona.per_fecha_registro}</td>
-      <td>${persona.fk_lugar}</td>
+      <td>${persona.lug_nombre}</td>
       <td>
         <div class="d-flex gap-2">
           <button class="btn btn-outline-primary update-btn" data-id="${persona.per_codigo}">

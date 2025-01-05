@@ -208,7 +208,7 @@ async function handleDelete(id) {
                 alert('Rol eliminado exitosamente');
                 fetchRoles();
             } else {
-                alert('Error al eliminar el rol: ' + data.message);
+                alert('Error al eliminar el rol: ' + data.details);
             }
         } catch (error) {
             console.error('Error:', error);

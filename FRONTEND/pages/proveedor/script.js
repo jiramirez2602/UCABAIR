@@ -146,7 +146,7 @@ function renderTable() {
       <td>${item.per_direccion}</td>
       <td>${formatDate(item.per_fecha_registro)}</td>
       <td>${item.pej_pagina_web}</td>
-      <td>${item.fk_lugar}</td>
+      <td>${item.lug_nombre}</td>
       <td>
         <button class="btn btn-outline-primary btn-sm me-2" onclick="showUpdateModal(${item.per_codigo})">
           <i class="bi bi-pencil"></i>
