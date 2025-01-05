@@ -1,23 +1,22 @@
 {
-    "version": 2,
-    "name": "backend",
-    "builds": [
-      {
-        "src": "src/index.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/src/index.js" }
-    ],
-    "env": {
-      "DB_USER": "@DB_USER",
-      "DB_PASSWORD": "@DB_PASSWORD",
-      "DB_HOST": "@DB_HOST",
-      "DB_DATABASE": "@DB_DATABASE",
-      "DB_PORT": "@DB_PORT",
-      "DB_SCHEMA": "@DB_SCHEMA",
-      "PORT": "@PORT"
+  "version": 2,
+  "name": "backend",
+  "builds": [
+    {
+      "src": "src/index.js",
+      "use": "@vercel/node"
     }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/src/index.js" }
+  ],
+  "env": {
+    "DB_USER": "@DB_USER",
+    "DB_PASSWORD": "@DB_PASSWORD",
+    "DB_HOST": "@DB_HOST",
+    "DB_DATABASE": "@DB_DATABASE",
+    "DB_PORT": "@DB_PORT",
+    "DB_SCHEMA": "@DB_SCHEMA",
+    "PORT": "@PORT"
   }
-  
+}
