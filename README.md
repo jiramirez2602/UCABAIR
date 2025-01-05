@@ -21,3 +21,4 @@ Jorge Ramírez, Angelo Di Martino y María Fernanda Bolívar
 - Personas Naturales
 - Personas Jurídicas
 - Gestión de Roles y Privilegios
+4. Crear privilegios granulares
