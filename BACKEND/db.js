@@ -1,27 +1,27 @@
-import pg from "pg";
-import {
-  DB_DATABASE,
-  DB_HOST,
-  DB_PASSWORD,
-  DB_PORT,
-  DB_USER,
-  DB_SCHEMA
-} from "./config.js";
+require('dotenv').config();
+const { Pool } = require('pg');
 
-export const pool = new pg.Pool({
-  user: DB_USER,
-  host: DB_HOST,
-  password: DB_PASSWORD,
-  database: DB_DATABASE,
-  port: DB_PORT,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-// Función para establecer el esquema por defecto
-async function setDefaultSchema(client, schema) {
-  await client.query(`SET search_path TO ${schema}`);
-}
-
-// Middleware para asegurar que el esquema está configurado por defecto
-pool.on("connect", async (client) => {
-  await setDefaultSchema(client, DB_SCHEMA); // Reemplaza con tu esquema
+pool.connect((err, client, release) => {
+  if (err) {
+    // eslint-disable-next-line no-console
+    return console.error('Error acquiring client', err.stack);
+  }
+  client.query('SELECT NOW()', (err, result) => {
+    release();
+    if (err) {
+    // eslint-disable-next-line no-console
+      return console.error('Error executing query', err.stack);
+    }
+    // eslint-disable-next-line no-console
+    console.log(result.rows);
+  });
 });
+
+module.exports = pool;
