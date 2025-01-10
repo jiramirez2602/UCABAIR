@@ -9,7 +9,7 @@
   ],
   "routes": [{ "src": "/(.*)", "dest": "/src/index.js" }],
   "env": {
-    "DB_USER": "@DB_USER",
+    "DB_USER": "@DB_USE",
     "DB_PASSWORD": "@DB_PASSWORD",
     "DB_HOST": "@DB_HOST",
     "DB_DATABASE": "@DB_DATABASE",
