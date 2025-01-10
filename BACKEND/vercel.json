@@ -9,7 +9,5 @@
   ],
   "routes": [{ "src": "/(.*)", "dest": "/src/index.js" }],
   "env": {
-    "DATABASE_URL_UNPOOLED": "@DATABASE_URL_UNPOOLED",
-    "DATABASE_URL": "@DATABASE_URL"
   }
 }
