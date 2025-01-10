@@ -1,10 +1,10 @@
 import { pool } from '../db.js';
 
-export const rolPrivilegio_SR = async (limit, page, search) => {
+export const rolPrivilegio_SR = async (search) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM leer_rol_privilegios($1, $2, $3)",
-      [limit, page, search]
+      "SELECT * FROM leer_rol_privilegios($1)",
+      [search]
     );
     return {
       status: 'success',

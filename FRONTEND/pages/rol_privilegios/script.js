@@ -3,14 +3,19 @@ const API_BASE_URL = `${BASE_URL}`;
 let rolPrivilegios = [];
 let roles = [];
 let privilegios = [];
+let currentPage = 1;
+let totalPages = 1;
+let sortColumn = '';
+let sortDirection = 'asc';
 
 // Elementos del DOM
 const searchInput = document.getElementById('searchInput');
-const limitSelect = document.getElementById('limitSelect');
+const limitInput = document.getElementById('limitInput');
 const searchButton = document.getElementById('searchButton');
 const rolPrivilegioTableBody = document.getElementById('rolPrivilegioTableBody');
 const createForm = document.getElementById('createForm');
 const updateForm = document.getElementById('updateForm');
+const paginationContainer = document.getElementById('paginationContainer');
 
 // Modales de Bootstrap
 const createModal = new bootstrap.Modal(document.getElementById('createModal'));
@@ -21,7 +26,10 @@ document.addEventListener('DOMContentLoaded', initialize);
 searchButton.addEventListener('click', fetchRolPrivilegios);
 createForm.addEventListener('submit', handleCreate);
 updateForm.addEventListener('submit', handleUpdate);
-limitSelect.addEventListener('change', fetchRolPrivilegios);
+limitInput.addEventListener('change', () => {
+    currentPage = 1;
+    fetchRolPrivilegios();
+});
 
 async function initialize() {
     await Promise.all([
@@ -63,12 +71,14 @@ async function fetchPrivilegios() {
 async function fetchRolPrivilegios() {
     try {
         const searchTerm = searchInput.value;
-        const limit = limitSelect.value;
-        const response = await fetch(`${API_BASE_URL}/rol_privilegio?limit=${limit}&page=1&search=${searchTerm}`);
+        const limit = limitInput.value;
+        const response = await fetch(`${API_BASE_URL}/rol_privilegio?limit=${limit}&page=${currentPage}&search=${searchTerm}`);
         const data = await response.json();
         if (data.status === 'success') {
             rolPrivilegios = data.data;
+            totalPages = data.totalPages;
             renderTable();
+            renderPagination();
         } else {
             console.error('Error al obtener rol-privilegios:', data.message);
         }
@@ -100,19 +110,46 @@ function populateSelects() {
 
 function renderTable() {
     rolPrivilegioTableBody.innerHTML = '';
-    rolPrivilegios.forEach(rolPrivilegio => {
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("rol_privilegios_create");
+    const canDelete = privileges.includes("rol_privilegios_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
+    const sortedData = [...rolPrivilegios].sort((a, b) => {
+        if (sortColumn) {
+            const aValue = a[sortColumn];
+            const bValue = b[sortColumn];
+            if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        }
+        return 0;
+    });
+
+    sortedData.forEach(rolPrivilegio => {
         const rol = roles.find(r => r.rol_codigo === rolPrivilegio.fk_rol);
         const privilegio = privilegios.find(p => p.pri_codigo === rolPrivilegio.fk_privilegio);
         
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${rolPrivilegio.rop_codigo}</td>
-            <td>${rol ? rol.rol_nombre : 'Rol no encontrado'}</td>
-            <td>${privilegio ? privilegio.pri_nombre : 'Privilegio no encontrado'}</td>
+            <td>${rolPrivilegio.rp_codigo}</td>
+            <td>${rolPrivilegio.rol_nombre}</td>
+            <td>${rolPrivilegio.pri_nombre}</td>
             <td>
-                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${rolPrivilegio.rop_codigo}">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <div class="d-flex gap-2">
+                    ${
+                      canDelete
+                        ? `
+                    <button class="btn btn btn-outline-danger delete-btn" data-id="${rolPrivilegio.rp_codigo}">
+                        <i class="bi bi-trash"></i>
+                    </button>`
+                        : ""
+                    }
+                </div>
             </td>
         `;
         rolPrivilegioTableBody.appendChild(row);
@@ -125,6 +162,37 @@ function renderTable() {
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', () => handleDelete(btn.dataset.id));
     });
+}
+
+document.querySelectorAll('.sortable').forEach(header => {
+    header.addEventListener('click', () => {
+        const column = header.dataset.column;
+        if (sortColumn === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortColumn = column;
+            sortDirection = 'asc';
+        }
+        renderTable();
+    });
+});
+
+function renderPagination() {
+    paginationContainer.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = document.createElement('li');
+        pageItem.classList.add('page-item');
+        if (i === currentPage) {
+            pageItem.classList.add('active');
+        }
+        pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        pageItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            fetchRolPrivilegios();
+        });
+        paginationContainer.appendChild(pageItem);
+    }
 }
 
 async function handleCreate(event) {

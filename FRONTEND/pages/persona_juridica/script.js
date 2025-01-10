@@ -2,15 +2,20 @@ import { BASE_URL } from '../../config.js';
 const API_URL = `${BASE_URL}/personasJuridicas`;
 const lugarApiUrl = `${BASE_URL}/lugar`;
 let currentData = [];
+let currentPage = 1;
+let totalPages = 1;
+let sortColumn = '';
+let sortDirection = 'asc';
 
 // Elementos del DOM
 const tableBody = document.getElementById("tableBody");
 const searchInput = document.getElementById("searchInput");
-const limitSelect = document.getElementById("limitSelect");
+const limitInput = document.getElementById("limitInput");
 const searchButton = document.getElementById("searchButton");
 const createButton = document.getElementById("createButton");
 const createForm = document.getElementById("createForm");
 const updateForm = document.getElementById("updateForm");
+const paginationContainer = document.getElementById("paginationContainer");
 
 // Modales de Bootstrap
 const createModal = new bootstrap.Modal(document.getElementById("createModal"));
@@ -24,9 +29,24 @@ createButton.addEventListener("click", () => {
 });
 createForm.addEventListener("submit", handleCreate);
 updateForm.addEventListener("submit", handleUpdate);
-limitSelect.addEventListener("change", () => {
+limitInput.addEventListener("change", () => {
   currentPage = 1;
   fetchData();
+});
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const column = th.dataset.column;
+    if (sortColumn === column) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortColumn = column;
+      sortDirection = 'asc';
+    }
+    document.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc', 'asc'));
+    th.classList.add(sortDirection);
+    renderTable();
+  });
 });
 
 // Make functions globally available
@@ -104,15 +124,17 @@ async function loadParroquias(municipioId, modalType) {
 async function fetchData() {
   try {
     const searchTerm = searchInput.value;
-    const limit = limitSelect.value;
+    const limit = limitInput.value;
     const response = await fetch(
-      `${API_URL}?limit=${limit}&page=1&search=${searchTerm}`
+      `${API_URL}?limit=${limit}&page=${currentPage}&search=${searchTerm}`
     );
     const data = await response.json();
 
     if (data.status === "success") {
       currentData = data.data;
+      totalPages = data.totalPages;
       renderTable();
+      renderPagination();
     }
   } catch (error) {
     console.error("Error al obtener datos:", error);
@@ -122,7 +144,29 @@ async function fetchData() {
 
 function renderTable() {
   tableBody.innerHTML = "";
-  currentData.forEach((item) => {
+  
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+  const canCreate = privileges.includes("persona_juridica_create");
+  const canUpdate = privileges.includes("persona_juridica_update");
+  const canDelete = privileges.includes("persona_juridica_delete");
+
+  if (!canCreate) {
+    createButton.style.display = "none";
+  }
+
+  const sortedData = [...currentData].sort((a, b) => {
+    if (sortColumn) {
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    }
+    return 0;
+  });
+
+  sortedData.forEach((item) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${item.per_codigo}</td>
@@ -133,16 +177,54 @@ function renderTable() {
       <td>${item.pej_pagina_web}</td>
       <td>${item.lug_nombre}</td>
       <td>
-        <button class="btn btn-outline-primary btn-sm me-2" onclick="showUpdateModal(${item.per_codigo})">
+        <div class="d-flex gap-2">
+          ${
+            canUpdate
+              ? `
+                  <button class="btn btn-outline-primary btn-sm me-2" onclick="showUpdateModal(${item.per_codigo})">
           <i class="bi bi-pencil"></i>
-        </button>
-        <button class="btn btn-outline-danger btn-sm" onclick="handleDelete(${item.per_codigo})">
+        </button>`
+              : ""
+          }
+          ${
+            canDelete
+              ? `
+          <button class="btn btn-outline-danger btn-sm" onclick="handleDelete(${item.per_codigo})">
           <i class="bi bi-trash"></i>
-        </button>
+        </button>`
+              : ""
+          }
+        </div>
       </td>
     `;
     tableBody.appendChild(row);
   });
+
+  // Add event listeners to update and delete buttons
+  document.querySelectorAll(".update-btn").forEach((btn) => {
+    btn.addEventListener("click", () => showUpdateModal(btn.dataset.id));
+  });
+  document.querySelectorAll(".delete-btn").forEach((btn) => {
+    btn.addEventListener("click", () => handleDelete(btn.dataset.id));
+  });
+}
+
+function renderPagination() {
+  paginationContainer.innerHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const pageItem = document.createElement('li');
+    pageItem.classList.add('page-item');
+    if (i === currentPage) {
+      pageItem.classList.add('active');
+    }
+    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+    pageItem.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentPage = i;
+      fetchData();
+    });
+    paginationContainer.appendChild(pageItem);
+  }
 }
 
 function formatDate(dateString) {

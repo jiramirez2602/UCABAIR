@@ -104,30 +104,50 @@ function populateSelects() {
 function renderTable() {
     faseTipoTableBody.innerHTML = '';
 
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("tipo_maquinaria_fase_create");
+    const canUpdate = privileges.includes("tipo_maquinaria_fase_update");
+    const canDelete = privileges.includes("tipo_maquinaria_fase_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
     maquinariaFases.forEach(maquinariaFase => {
         const tMaquinaria = tipoMaquinaria.find(t => t.tim_codigo === maquinariaFase.fk_tipo_maquinaria);
         const faseConf = fases.find(f => f.fac_codigo === maquinariaFase.fk_fase_configuracion);
-        
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${maquinariaFase.tmc_codigo}</td>
             <td>${tMaquinaria ? tMaquinaria.tim_nombre : 'Tipo de maquinaria no encontrado'}</td>
             <td>${faseConf ? faseConf.fac_nombre : 'Fase de configuración no encontrada'}</td>
             <td>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary update-btn" data-id="${maquinariaFase.tmc_codigo}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${maquinariaFase.tmc_codigo}">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
+                    <button class="btn btn-outline-primary update-btn" data-id="${maquinariaFase.tmc_codigo}">
+                        <i class="bi bi-pencil"></i>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
+                    <button class="btn btn-outline-danger delete-btn" data-id="${maquinariaFase.tmc_codigo}">
+                        <i class="bi bi-trash"></i>
+                    </button>`
+                        : ""
+                    }
                 </div>
             </td>
         `;
         faseTipoTableBody.appendChild(row);
     });
 
-    // Event listeners para botones de acción
+    // Event listeners for update and delete buttons
     document.querySelectorAll('.update-btn').forEach(btn => {
         btn.addEventListener('click', () => showUpdateModal(btn.dataset.id));
     });
@@ -135,6 +155,7 @@ function renderTable() {
         btn.addEventListener('click', () => handleDelete(btn.dataset.id));
     });
 }
+
 
 async function handleCreate(event) {
     event.preventDefault();

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pagosf" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="78e4d6d3-74df-4fcc-9b17-c5fa43ddb99c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgresql"/>
+	<parameter name="fecha_inicio" class="java.sql.Date"/>
+	<parameter name="fecha_fin" class="java.sql.Date"/>
+	<queryString language="SQL">
+		<![CDATA[select * from obtener_pagos( $P{fecha_inicio} , $P{fecha_fin} );]]>
+	</queryString>
+	<field name="ID de pago" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="ID de pago"/>
+		<property name="com.jaspersoft.studio.field.label" value="ID de pago"/>
+	</field>
+	<field name="Monto" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="Monto"/>
+		<property name="com.jaspersoft.studio.field.label" value="Monto"/>
+	</field>
+	<field name="Fecha de pago" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="Fecha de pago"/>
+		<property name="com.jaspersoft.studio.field.label" value="Fecha de pago"/>
+	</field>
+	<field name="Proveedor" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Proveedor"/>
+		<property name="com.jaspersoft.studio.field.label" value="Proveedor"/>
+	</field>
+	<field name="Num de compra" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="Num de compra"/>
+		<property name="com.jaspersoft.studio.field.label" value="Num de compra"/>
+	</field>
+	<field name="Fecha de compra" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="Fecha de compra"/>
+		<property name="com.jaspersoft.studio.field.label" value="Fecha de compra"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="-5" width="120" height="25" uuid="c293c14a-0580-4c6f-bf65-c740068a93e9">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[UCABAIR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="120" height="15" uuid="26ee10a5-8562-48bf-bbd3-5dd6485a05ff"/>
+				<text><![CDATA[Catia La Mar, Venezuela]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="120" height="15" uuid="916fce9f-57fd-4662-ae3a-743836496a1b"/>
+				<text><![CDATA[www.ucabair.com]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="81" width="549" height="1" uuid="a16a4edf-9bb2-431b-b37d-8417fe11fc67">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="180" y="20" width="370" height="40" uuid="09dd7285-297d-4174-b45d-eaec732f68b6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Lucida Sans Typewriter" size="20" isBold="true" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[PAGOS REALIZADOS A PROVEEDORES]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="470" y="-3" width="84" height="20" uuid="237198f4-dc06-4abb-8a91-b8c1ead6e338"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="-3" width="50" height="20" uuid="2ed36c7e-4956-4dfa-b5f0-7c8cc3e7ddf2"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="-1" y="0" width="51" height="30" backcolor="#FF9966" uuid="24ac7092-d516-4eaa-a8a0-9f0591d7c2bd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cf659046-0e2a-4513-b82b-2c834b1418ba"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ID de pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="50" y="0" width="100" height="30" backcolor="#FF9966" uuid="d954034c-396b-4805-b578-35a8608c488c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8653f162-fa92-4512-b362-87f9e88badb5"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="150" y="0" width="100" height="30" backcolor="#FF9966" uuid="12dac2f2-4041-43f1-b62c-e67aaf58c0a9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a3ee4d43-18e5-4627-aebf-40a034d3a2b4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Fecha de pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="250" y="0" width="100" height="30" backcolor="#FF9966" uuid="7184c319-b8b7-458c-ba45-26d4179e2c3a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="66346f39-6031-4b15-a3ca-b12461d28c6e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Proveedor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="350" y="0" width="100" height="30" backcolor="#FF9966" uuid="cdbd324f-3f41-41db-82ef-9fc15f273383">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8a6ae57-f6d3-4607-b917-eac954cc98d4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Num de compra]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="450" y="0" width="100" height="30" backcolor="#FF9966" uuid="075d4737-c1ec-4dc9-9ab4-f7e96e4806b3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ec0da683-f25b-409a-864e-65b4cb299c0e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Fecha de compra]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="51" height="30" uuid="f63394b8-a702-4244-8548-d3b2d0058cb3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cf659046-0e2a-4513-b82b-2c834b1418ba"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ID de pago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="0" width="100" height="30" uuid="a23f7a75-8063-4f78-801b-70f395bfd4b9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8653f162-fa92-4512-b362-87f9e88badb5"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Monto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="100" height="30" uuid="5c823604-2c40-47f2-b7da-47b500740877">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a3ee4d43-18e5-4627-aebf-40a034d3a2b4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Fecha de pago}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="100" height="30" uuid="20d871be-a15b-48ff-b9fe-13499315154f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="66346f39-6031-4b15-a3ca-b12461d28c6e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Proveedor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="0" width="100" height="30" uuid="e05c1e58-6f0b-4cff-bfc7-7c4f2c12b510">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8a6ae57-f6d3-4607-b917-eac954cc98d4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Num de compra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="100" height="30" uuid="ef0458d0-8083-44e5-b156-3f0f989d00f7">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ec0da683-f25b-409a-864e-65b4cb299c0e"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Fecha de compra}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

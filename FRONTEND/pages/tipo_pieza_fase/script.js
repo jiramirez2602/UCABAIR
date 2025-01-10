@@ -103,33 +103,51 @@ function populateSelects() {
 
 function renderTable() {
     faseTipoTableBody.innerHTML = '';
-    console.log('PiezaFase: ', piezaFases);
-    console.log('TipoPiezas: ', tipoPiezas);
-    console.log('Fases: ', fases);
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("tipo_pieza_fase_create");
+    const canUpdate = privileges.includes("tipo_pieza_fase_update");
+    const canDelete = privileges.includes("tipo_pieza_fase_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
     piezaFases.forEach(piezaFase => {
         const tPieza = tipoPiezas.find(t => t.tip_codigo === piezaFase.fk_tipo_pieza);
         const faseConf = fases.find(f => f.fac_codigo === piezaFase.fk_fase_configuracion);
-        
+
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${piezaFase.tpf_codigo}</td>
             <td>${tPieza ? tPieza.tip_nombre_tipo : 'Tipo de pieza no encontrado'}</td>
             <td>${faseConf ? faseConf.fac_nombre : 'Fase de configuración no encontrada'}</td>
             <td>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary update-btn" data-id="${piezaFase.tpf_codigo}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${piezaFase.tpf_codigo}">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
+                    <button class="btn btn-outline-primary update-btn" data-id="${piezaFase.tpf_codigo}">
+                        <i class="bi bi-pencil"></i>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
+                    <button class="btn btn-outline-danger delete-btn" data-id="${piezaFase.tpf_codigo}">
+                        <i class="bi bi-trash"></i>
+                    </button>`
+                        : ""
+                    }
                 </div>
             </td>
         `;
         faseTipoTableBody.appendChild(row);
     });
 
-    // Event listeners para botones de acción
+    // Event listeners for update and delete buttons
     document.querySelectorAll('.update-btn').forEach(btn => {
         btn.addEventListener('click', () => showUpdateModal(btn.dataset.id));
     });

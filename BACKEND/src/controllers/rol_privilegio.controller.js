@@ -6,13 +6,27 @@ import {
   } from '../services/rol_privilegio.service.js';
   
   export const getRolPrivilegios = async (req, res) => {
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const page = parseInt(req.query.page, 10) || 1;
     const search = req.query.search || '';
+    const limit = parseInt(req.query.limit, 10) || 10; // Valor predeterminado 10
+    const page = parseInt(req.query.page, 10) || 1; // Valor predeterminado 1
   
     try {
-      const response = await rolPrivilegio_SR(limit, page, search);
-      res.status(response.status === 'success' ? 200 : 500).json(response);
+      const allPrivilegios = await rolPrivilegio_SR(search);
+      
+      // Paginar los resultados
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedPrivilegios = allPrivilegios.data.slice(startIndex, endIndex);
+  
+      const totalElements = allPrivilegios.data.length; // Cantidad de elementos de la consulta
+      const totalPages = Math.ceil(totalElements / limit); // Número de páginas
+  
+      res.status(allPrivilegios.status === 'success' ? 200 : 500).json({
+        ...allPrivilegios,
+        data: paginatedPrivilegios,
+        totalElements,
+        totalPages,
+      });
     } catch (err) {
       res.status(500).json({
         status: 'error',
@@ -22,7 +36,7 @@ import {
       });
     }
   };
-
+  
   export const createRolPrivilegio = async (req, res) => {
     const { fk_rol, fk_privilegio } = req.body;
   

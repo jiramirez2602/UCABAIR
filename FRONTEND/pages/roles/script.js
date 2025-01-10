@@ -21,7 +21,7 @@ const createModal = new bootstrap.Modal(document.getElementById('createModal'));
 const updateModal = new bootstrap.Modal(document.getElementById('updateModal'));
 
 // Event Listeners
-searchButton.addEventListener('change', fetchRoles);
+searchButton.addEventListener('click', fetchRoles);
 createForm.addEventListener('submit', handleCreate);
 updateForm.addEventListener('submit', handleUpdate);
 limitInput.addEventListener('change', () => {
@@ -52,7 +52,17 @@ async function fetchRoles() {
 }
 
 function renderTable() {
-    roleTableBody.innerHTML = '';
+    roleTableBody.innerHTML = "";
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("roles_create");
+    const canUpdate = privileges.includes("roles_update");
+    const canDelete = privileges.includes("roles_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
     const sortedRoles = [...roles].sort((a, b) => {
         if (sortColumn) {
             const aValue = a[sortColumn];
@@ -71,12 +81,24 @@ function renderTable() {
             <td>${role.rol_nombre}</td>
             <td>${role.rol_descripcion}</td>
             <td>
-                <button class="btn btn-sm btn-outline-primary update-btn" data-id="${role.rol_codigo}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${role.rol_codigo}">
-                    <i class="bi bi-trash"></i>
-                </button>
+                <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
+                    <button class="btn btn btn-outline-primary update-btn" data-id="${role.rol_codigo}">
+                        <i class="bi bi-pencil"></i>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
+                    <button class="btn btn btn-outline-danger delete-btn" data-id="${role.rol_codigo}">
+                        <i class="bi bi-trash"></i>
+                    </button>`
+                        : ""
+                    }
+                </div>
             </td>
         `;
         roleTableBody.appendChild(row);

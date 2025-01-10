@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personas Jurídicas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="../../resources/plane-svgrepo-com.svg" type="image/svg+xml">
 </head>
@@ -21,12 +21,7 @@
                 <input type="text" id="searchInput" class="form-control" placeholder="Buscar personas jurídicas...">
             </div>
             <div class="col-md-3">
-                <select id="limitSelect" class="form-select">
-                    <option value="10">10 registros</option>
-                    <option value="25">25 registros</option>
-                    <option value="50">50 registros</option>
-                    <option value="9999999">Todos los registros</option>
-                </select>
+                <input type="number" id="limitInput" class="form-control" placeholder="Límite" value="10">
             </div>
             <div class="col-md-3">
                 <button id="searchButton" class="btn btn-primary">Buscar</button>
@@ -37,18 +32,24 @@
         <table class="table table-dark table-striped">
             <thead>
                 <tr>
-                    <th>Código</th>
-                    <th>Nombre</th>
-                    <th>Identificación</th>
-                    <th>Dirección</th>
-                    <th>Fecha Registro</th>
-                    <th>Página Web</th>
-                    <th>Lugar</th>
+                    <th class="sortable" data-column="per_codigo">Código</th>
+                    <th class="sortable" data-column="per_nombre">Nombre</th>
+                    <th class="sortable" data-column="per_identificacion">Identificación</th>
+                    <th class="sortable" data-column="per_direccion">Dirección</th>
+                    <th class="sortable" data-column="per_fecha_registro">Fecha Registro</th>
+                    <th class="sortable" data-column="pej_pagina_web">Página Web</th>
+                    <th class="sortable" data-column="lug_nombre">Lugar</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody id="tableBody"></tbody>
         </table>
+        <!-- Pagination controls -->
+        <nav>
+            <ul class="pagination justify-content-center" id="paginationContainer">
+                <!-- Pagination items will be inserted here dynamically -->
+            </ul>
+        </nav>
     </div>
 
     <!-- Modal de Creación -->
@@ -162,7 +163,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="script.js"></script>
 </body>
 </html>

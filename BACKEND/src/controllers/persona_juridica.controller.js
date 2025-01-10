@@ -38,14 +38,29 @@ export const getProveedores = async (req, res) => {
   }
 };
 
+
 export const getPersonasJuridicas = async (req, res) => {
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const page = parseInt(req.query.page, 10) || 1;
   const search = req.query.search || '';
+  const limit = parseInt(req.query.limit, 10) || 10; // Default value 10
+  const page = parseInt(req.query.page, 10) || 1; // Default value 1
 
   try {
-    const response = await personaJuridica_SR(limit, page, search);
-    res.status(response.status === 'success' ? 200 : 500).json(response);
+    const allPersonas = await personaJuridica_SR(search);
+
+    // Paginate the results
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedPersonas = allPersonas.data.slice(startIndex, endIndex);
+
+    const totalElements = allPersonas.data.length; // Total number of elements in the query
+    const totalPages = Math.ceil(totalElements / limit); // Number of pages
+
+    res.status(allPersonas.status === 'success' ? 200 : 500).json({
+      ...allPersonas,
+      data: paginatedPersonas,
+      totalElements,
+      totalPages,
+    });
   } catch (err) {
     res.status(500).json({
       status: 'error',
@@ -55,6 +70,7 @@ export const getPersonasJuridicas = async (req, res) => {
     });
   }
 };
+
 
 export const createPersonaJuridica = async (req, res) => {
   const { nombre, direccion, fecha_registro, identificacion, pagina_web, fk_lugar } = req.body;

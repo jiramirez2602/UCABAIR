@@ -1,12 +1,18 @@
 import { leerPersonasNaturales_SR } from "../services/persona_natural.service.js";
 
 export const getPersonasNaturales = async (req, res) => {
-  const limit = parseInt(req.query.limit, 10) || 10;
-  const page = parseInt(req.query.page, 10) || 1;
-  const search = req.query.search || "";
+  const search = req.query.search || '';
+  const limit = parseInt(req.query.limit, 10) || 10; // Valor predeterminado 10
+  const page = parseInt(req.query.page, 10) || 1; // Valor predeterminado 1
 
   try {
-    const response = await leerPersonasNaturales_SR(limit, page, search);
+    const allPersonas = await leerPersonasNaturales_SR(search);
+    
+    // Paginar los resultados
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + limit;
+    const paginatedPersonas = allPersonas.data.slice(startIndex, endIndex);
+
     const convertDateFormat = (dateString) => {
       const date = new Date(dateString);
       const year = date.getFullYear();
@@ -14,23 +20,34 @@ export const getPersonasNaturales = async (req, res) => {
       const day = String(date.getDate()).padStart(2, "0");
       return `${year}-${month}-${day}`;
     };
-    response.data = response.data.map((persona) => {
+
+    const formattedPersonas = paginatedPersonas.map((persona) => {
       return {
         ...persona,
         per_fecha_registro: convertDateFormat(persona.per_fecha_registro),
         pen_fecha_nac: convertDateFormat(persona.pen_fecha_nac),
       };
     });
-    res.status(response.status === "success" ? 200 : 500).json(response);
+
+    const totalElements = allPersonas.data.length; // Cantidad de elementos de la consulta
+    const totalPages = Math.ceil(totalElements / limit); // Número de páginas
+
+    res.status(allPersonas.status === 'success' ? 200 : 500).json({
+      ...allPersonas,
+      data: formattedPersonas,
+      totalElements,
+      totalPages,
+    });
   } catch (err) {
     res.status(500).json({
-      status: "error",
-      message: "Error al obtener las personas naturales",
+      status: 'error',
+      message: 'Error al obtener las personas naturales',
       data: [],
       details: err.message,
     });
   }
 };
+
 import { crearPersonaNatural_SC } from "../services/persona_natural.service.js";
 
 export const createPersonaNatural = async (req, res) => {

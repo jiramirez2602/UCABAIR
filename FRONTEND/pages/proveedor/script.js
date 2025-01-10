@@ -126,6 +126,17 @@ async function fetchData() {
 
 function renderTable() {
   tableBody.innerHTML = "";
+  
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+  const canCreate = privileges.includes("proveedor_create");
+  const canUpdate = privileges.includes("proveedor_update");
+  const canDelete = privileges.includes("proveedor_delete");
+
+  if (!canCreate) {
+    createButton.style.display = "none";
+  }
+
   const sortedData = [...currentData].sort((a, b) => {
     if (sortColumn) {
       const aValue = a[sortColumn];
@@ -148,12 +159,24 @@ function renderTable() {
       <td>${item.pej_pagina_web}</td>
       <td>${item.lug_nombre}</td>
       <td>
-        <button class="btn btn-outline-primary btn-sm me-2" onclick="showUpdateModal(${item.per_codigo})">
-          <i class="bi bi-pencil"></i>
-        </button>
-        <button class="btn btn-outline-danger btn-sm" onclick="handleDelete(${item.per_codigo})">
-          <i class="bi bi-trash"></i>
-        </button>
+        <div class="d-flex gap-2">
+          ${
+            canUpdate
+              ? `
+          <button class="btn btn-outline-primary btn-sm update-btn" data-id="${item.per_codigo}">
+            <i class="bi bi-pencil"></i>
+          </button>`
+              : ""
+          }
+          ${
+            canDelete
+              ? `
+          <button class="btn btn-outline-danger btn-sm delete-btn" data-id="${item.per_codigo}">
+            <i class="bi bi-trash"></i>
+          </button>`
+              : ""
+          }
+        </div>
       </td>
     `;
     tableBody.appendChild(row);
@@ -242,7 +265,7 @@ async function handleCreate(event) {
 }
 
 function showUpdateModal(id) {
-  const item = currentData.find((x) => x.per_codigo === id);
+  const item = currentData.find((x) => x.per_codigo === parseInt(id));
   if (item) {
     document.getElementById("updateCodigo").value = item.per_codigo;
     document.getElementById("updateNombre").value = item.per_nombre;
@@ -265,11 +288,11 @@ function showUpdateModal(id) {
     updateModal.show();
   }
 }
-
 async function handleUpdate(event) {
   event.preventDefault();
+  const codigo = document.getElementById("updateCodigo").value;
+  
   const formData = {
-    codigo: parseInt(document.getElementById("updateCodigo").value),
     nombre: document.getElementById("updateNombre").value,
     identificacion: document.getElementById("updateIdentificacion").value,
     direccion: document.getElementById("updateDireccion").value,
@@ -279,7 +302,7 @@ async function handleUpdate(event) {
   };
 
   try {
-    const response = await fetch(API_URL, {
+    const response = await fetch(`${API_URL}/${codigo}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -287,7 +310,7 @@ async function handleUpdate(event) {
     const data = await response.json();
 
     if (data.status === "success") {
-      alert("Persona jurídica actualizada exitosamente");
+      alert("Proveedor actualizado exitosamente");
       updateModal.hide();
       fetchData();
     } else {
@@ -295,7 +318,7 @@ async function handleUpdate(event) {
     }
   } catch (error) {
     console.error("Error al actualizar:", error);
-    alert("Error al actualizar la persona jurídica");
+    alert("Error al actualizar el proveedor");
   }
 }
 

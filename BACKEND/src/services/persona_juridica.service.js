@@ -1,10 +1,11 @@
 import { pool } from "../db.js";
 
-export const personaJuridica_SR = async (limit, page, search) => {
+
+export const personaJuridica_SR = async (search) => {
   try {
     const result = await pool.query(
-      "SELECT * FROM leer_personas_juridicas($1, $2, $3)",
-      [limit, page, search]
+      "SELECT * FROM leer_personas_juridicas($1)",
+      [search]
     );
     return {
       status: "success",
@@ -21,6 +22,7 @@ export const personaJuridica_SR = async (limit, page, search) => {
     };
   }
 };
+
 
 export const proveedor_SR = async (search) => {
   try {

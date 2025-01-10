@@ -55,6 +55,17 @@ async function fetchData() {
 
 function renderTable() {
     employeeTableBody.innerHTML = '';
+  
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("empleado_create");
+    const canUpdate = privileges.includes("empleado_update");
+    const canDelete = privileges.includes("empleado_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
     const sortedEmployees = [...employees].sort((a, b) => {
         if (sortColumn) {
             const aValue = a[sortColumn];
@@ -76,12 +87,22 @@ function renderTable() {
             <td>${employee.usu_nombre}</td>
             <td>
                 <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
                     <button class="btn btn-outline-primary update-btn" data-id="${employee.emp_codigo}">
                         <i class="bi bi-pencil"></i>
-                    </button>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
                     <button class="btn btn-outline-danger delete-btn" data-id="${employee.emp_codigo}">
                         <i class="bi bi-trash"></i>
-                    </button>
+                    </button>`
+                        : ""
+                    }
                 </div>
             </td>
         `;

@@ -19,10 +19,15 @@ import tipoMaquinaria from './routes/tipo_maquinaria.routes.js';
 import tipoMaquinariaFase from './routes/tipo_maquinaria_fase.routes.js';
 import cargos from './routes/cargo.routes.js'; 
 import cargoFase from './routes/cargo_fase.routes.js';
+//import jasperRoutes from './routes/jasper.routes.js';
+import solicitudes from './routes/pago_proveedores.routes.js';
+import metodos_pago from './routes/metodo_pago.routes.js';
+import tasa_cambio from './routes/tasa_cambio.routes.js';
 import morgan from "morgan";
 import { PORT } from "./config.js";
 import cors from "cors"; 
 import { pool } from "./db.js"; 
+
 
 const app = express();
 
@@ -73,6 +78,10 @@ testDatabaseConnection().then(() => {
   app.use(tipoMaquinariaFase);
   app.use(cargos);
   app.use(cargoFase);
+  //app.use(jasperRoutes);
+  app.use(solicitudes);
+  app.use(metodos_pago);
+  app.use(tasa_cambio);
 
   app.listen(PORT, () => {
     // eslint-disable-next-line no-console

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Modelo_prueba_cargos_duracion" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="df013db5-f76e-44d3-b0df-bcbc46d93160">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgresql"/>
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/Reportes_Entrega1/Modelo_prueba_cargos_duracion_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/Reportes_Entrega1/Modelo_prueba_cargos_duracion"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true"/>
+	<style name="SubTitle" forecolor="#DDE3D6" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#DDE3D6" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#DDE3D6">
+				<pen lineColor="#3E4E3E"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0"/>
+			</style>
+		</conditionalStyle>
+	</style>
+	<queryString language="SQL">
+		<![CDATA[SELECT 
+    ma.moa_nombre AS "Nombre del modelo",
+    (SELECT STRING_AGG(p.pru_nombre, E'\n')
+     FROM prueba p
+     JOIN cargo_prueba cp ON cp.fk_prueba = p.pru_codigo
+     JOIN cargo c ON c.car_codigo = cp.fk_cargo
+     JOIN tipo_pieza tp ON p.fk_tipo_pieza = tp.tip_codigo
+     JOIN tipo_pieza_modelo tpm ON tpm.fk_tipo_pieza = tp.tip_codigo
+     WHERE tpm.fk_modelo_avion = ma.moa_codigo) AS "Tipos de prueba",
+     
+    (SELECT STRING_AGG(p.pru_duracion_estimada::TEXT, E'\n')
+     FROM prueba p
+     JOIN cargo_prueba cp ON cp.fk_prueba = p.pru_codigo
+     JOIN cargo c ON c.car_codigo = cp.fk_cargo
+     JOIN tipo_pieza tp ON p.fk_tipo_pieza = tp.tip_codigo
+     JOIN tipo_pieza_modelo tpm ON tpm.fk_tipo_pieza = tp.tip_codigo
+     WHERE tpm.fk_modelo_avion = ma.moa_codigo) AS "Duración de la prueba",
+     
+    (SELECT STRING_AGG(c.car_nombre, E'\n')
+     FROM cargo c
+     JOIN cargo_prueba cp ON cp.fk_cargo = c.car_codigo
+     JOIN prueba p ON cp.fk_prueba = p.pru_codigo
+     JOIN tipo_pieza tp ON p.fk_tipo_pieza = tp.tip_codigo
+     JOIN tipo_pieza_modelo tpm ON tpm.fk_tipo_pieza = tp.tip_codigo
+     WHERE tpm.fk_modelo_avion = ma.moa_codigo) AS "Cargos involucrados"
+FROM 
+    modelo_avion ma
+ORDER BY 
+    ma.moa_nombre;]]>
+	</queryString>
+	<field name="Nombre del modelo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Nombre del modelo"/>
+		<property name="com.jaspersoft.studio.field.label" value="Nombre del modelo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="modelo_avion"/>
+	</field>
+	<field name="Tipos de prueba" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Tipos de prueba"/>
+		<property name="com.jaspersoft.studio.field.label" value="Tipos de prueba"/>
+	</field>
+	<field name="Duración de la prueba" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Duración de la prueba"/>
+		<property name="com.jaspersoft.studio.field.label" value="Duración de la prueba"/>
+	</field>
+	<field name="Cargos involucrados" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="Cargos involucrados"/>
+		<property name="com.jaspersoft.studio.field.label" value="Cargos involucrados"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="156" y="0" width="489" height="40" forecolor="#185219" uuid="bc1ce1da-8232-46ea-be55-cec4abb986dd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Cooper Black" size="30"/>
+				</textElement>
+				<text><![CDATA[Modelos de Aviones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="361" y="67" width="80" height="20" uuid="8240065e-64b6-4170-b5d9-6341598e7b35"/>
+				<textElement textAlignment="Center">
+					<font fontName="Consolas" size="16"/>
+				</textElement>
+				<text><![CDATA[UcabAir]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="40" width="340" height="27" forecolor="#185219" uuid="806cbe2b-23e4-491b-b022-f569096939d8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Cooper Black" size="16"/>
+				</textElement>
+				<text><![CDATA[Tipos de Pruebas, Cargos y Duración]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="e9d2002a-c8ee-4649-a258-640dad29110c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="80" height="15" forecolor="#3E4E3E" uuid="1a9a66a4-2f4b-4216-a3ed-e98e89709c48">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="94619fae-0826-4957-845a-5e968dd6e749"/>
+				</reportElement>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<pen lineColor="#000000"/>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<text><![CDATA[Modelo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="80" y="0" width="454" height="15" forecolor="#3E4E3E" uuid="bb9b6cf0-bfc6-41a4-98f2-7ec6135a4206">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e7876fd4-fc71-400c-af88-b3b833ac4471"/>
+				</reportElement>
+				<text><![CDATA[Tipos de prueba]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="535" y="1" width="85" height="15" forecolor="#3E4E3E" uuid="b692e9ba-ad7b-475e-bdbd-3a6e47b55f29">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5e6ed691-ab79-401d-be81-d558ff8ad783"/>
+				</reportElement>
+				<text><![CDATA[Duración]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="620" y="0" width="179" height="15" forecolor="#3E4E3E" uuid="4c4687a9-87c0-4754-9ed8-72cd2f1b2038">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="afacb78e-f1ac-4441-94f2-38d38a36a340"/>
+				</reportElement>
+				<text><![CDATA[Cargos involucrados]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="fa7cec56-4ec1-48e6-a26e-7266a995d174"/>
+				<textField textAdjust="StretchHeight">
+					<reportElement style="Detail" x="0" y="0" width="80" height="15" uuid="1ed8fb4a-b285-4c7e-8f19-44c018aa2217">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="94619fae-0826-4957-845a-5e968dd6e749"/>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Nombre del modelo}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight">
+					<reportElement style="Detail" x="80" y="0" width="454" height="15" uuid="dc347ab9-956f-43d3-870e-bb2dd293d96a">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="e7876fd4-fc71-400c-af88-b3b833ac4471"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$F{Tipos de prueba}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight">
+					<reportElement style="Detail" x="535" y="0" width="85" height="15" uuid="65a1d1eb-0f7f-4483-89a0-5c3db2ddca59">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="5e6ed691-ab79-401d-be81-d558ff8ad783"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Duración de la prueba}]]></textFieldExpression>
+				</textField>
+				<textField textAdjust="StretchHeight">
+					<reportElement style="Detail" x="620" y="0" width="179" height="15" uuid="a41ecb37-ffb1-4d44-a1ca-ac64f3d9320f">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="afacb78e-f1ac-4441-94f2-38d38a36a340"/>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{Cargos involucrados}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="fa5e88d5-a011-4e32-8f12-ce923f903111"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="34" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-10" y="10" width="811" height="24" forecolor="#DDE3D6" backcolor="#DDE3D6" uuid="5d8169bd-4a75-48c8-8a68-6d3ad5ba9402"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="769" y="0" width="40" height="20" forecolor="#736343" uuid="e5e27efa-b599-499b-9ca3-848cb511cb7b"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="690" y="0" width="80" height="20" forecolor="#736343" uuid="18cfe1ca-f7d6-48b0-9827-28578b42a5e0"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="fbce24bb-3cb1-44a3-8eec-8c067ddbe5b5"/>
+					<textElement verticalAlignment="Middle">
+						<font size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

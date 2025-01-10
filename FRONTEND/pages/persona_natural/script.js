@@ -2,15 +2,20 @@ import { BASE_URL } from '../../config.js';
 const apiUrl = `${BASE_URL}/personasNaturales`;
 const lugarApiUrl = `${BASE_URL}/lugar`;
 let personas = [];
+let currentPage = 1;
+let totalPages = 1;
+let sortColumn = '';
+let sortDirection = 'asc';
 
 // DOM Elements
 const searchInput = document.getElementById("searchInput");
-const limitSelect = document.getElementById("limitSelect");
+const limitInput = document.getElementById("limitInput");
 const searchButton = document.getElementById("searchButton");
 const createButton = document.getElementById("createButton");
 const personaTableBody = document.getElementById("personaTableBody");
 const createForm = document.getElementById("createForm");
 const updateForm = document.getElementById("updateForm");
+const paginationContainer = document.getElementById("paginationContainer");
 
 // Bootstrap Modals
 const createModal = new bootstrap.Modal(document.getElementById("createModal"));
@@ -24,9 +29,25 @@ createButton.addEventListener("click", () => {
 });
 createForm.addEventListener("submit", handleCreate);
 updateForm.addEventListener("submit", handleUpdate);
-limitSelect.addEventListener("change", () => {
+limitInput.addEventListener("change", () => {
+  limit = parseInt(limitInput.value) || 10;
   currentPage = 1;
   fetchData();
+});
+
+document.querySelectorAll('th.sortable').forEach(th => {
+  th.addEventListener('click', () => {
+    const column = th.dataset.column;
+    if (sortColumn === column) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortColumn = column;
+      sortDirection = 'asc';
+    }
+    document.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc', 'asc'));
+    th.classList.add(sortDirection);
+    renderTable();
+  });
 });
 
 // Initial data fetch
@@ -101,14 +122,16 @@ async function loadParroquias(municipioId, modalType) {
 async function fetchData() {
   try {
     const searchTerm = searchInput.value;
-    const limit = limitSelect.value;
+    const limit = limitInput.value;
     const response = await fetch(
-      `${apiUrl}?limit=${limit}&page=1&search=${searchTerm}`
+      `${apiUrl}?limit=${limit}&page=${currentPage}&search=${searchTerm}`
     );
     const data = await response.json();
     if (data.status === "success") {
       personas = data.data;
+      totalPages = data.totalPages;
       renderTable();
+      renderPagination();
     } else {
       console.error("Error al obtener datos:", data.message);
     }
@@ -119,7 +142,29 @@ async function fetchData() {
 
 function renderTable() {
   personaTableBody.innerHTML = "";
-  personas.forEach((persona) => {
+  
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+  const canCreate = privileges.includes("persona_natural_create");
+  const canUpdate = privileges.includes("persona_natural_update");
+  const canDelete = privileges.includes("persona_natural_delete");
+
+  if (!canCreate) {
+    createButton.style.display = "none";
+  }
+
+  const sortedData = [...personas].sort((a, b) => {
+    if (sortColumn) {
+      const aValue = a[sortColumn];
+      const bValue = b[sortColumn];
+      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    }
+    return 0;
+  });
+
+  sortedData.forEach((persona) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${persona.per_codigo}</td>
@@ -136,12 +181,20 @@ function renderTable() {
       <td>${persona.lug_nombre}</td>
       <td>
         <div class="d-flex gap-2">
-          <button class="btn btn-outline-primary update-btn" data-id="${persona.per_codigo}">
-            <i class="bi bi-pencil"></i>
-          </button>
-          <button class="btn btn-outline-danger delete-btn" data-id="${persona.per_codigo}">
-            <i class="bi bi-trash"></i>
-          </button>
+          ${
+            canUpdate
+              ? `<button class="btn btn-outline-primary update-btn" data-id="${persona.per_codigo}">
+                   <i class="bi bi-pencil"></i>
+                 </button>`
+              : ""
+          }
+          ${
+            canDelete
+              ? `<button class="btn btn-outline-danger delete-btn" data-id="${persona.per_codigo}">
+                   <i class="bi bi-trash"></i>
+                 </button>`
+              : ""
+          }
         </div>
       </td>
     `;
@@ -155,6 +208,24 @@ function renderTable() {
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", () => handleDelete(btn.dataset.id));
   });
+}
+
+function renderPagination() {
+  paginationContainer.innerHTML = '';
+  for (let i = 1; i <= totalPages; i++) {
+    const pageItem = document.createElement('li');
+    pageItem.classList.add('page-item');
+    if (i === currentPage) {
+      pageItem.classList.add('active');
+    }
+    pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+    pageItem.addEventListener('click', (e) => {
+      e.preventDefault();
+      currentPage = i;
+      fetchData();
+    });
+    paginationContainer.appendChild(pageItem);
+  }
 }
 
 function showUpdateModal(id) {

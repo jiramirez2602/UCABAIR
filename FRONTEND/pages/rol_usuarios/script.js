@@ -3,14 +3,19 @@ const API_BASE_URL = `${BASE_URL}`;
 let userRoles = [];
 let users = [];
 let roles = [];
+let currentPage = 1;
+let totalPages = 1;
+let sortColumn = '';
+let sortDirection = 'asc';
 
 // Elementos del DOM
 const searchInput = document.getElementById('searchInput');
-const limitSelect = document.getElementById('limitSelect');
+const limitInput = document.getElementById('limitInput');
 const searchButton = document.getElementById('searchButton');
 const userRoleTableBody = document.getElementById('userRoleTableBody');
 const createForm = document.getElementById('createForm');
 const updateForm = document.getElementById('updateForm');
+const paginationContainer = document.getElementById('paginationContainer');
 
 // Modales de Bootstrap
 const createModal = new bootstrap.Modal(document.getElementById('createModal'));
@@ -21,7 +26,25 @@ document.addEventListener('DOMContentLoaded', initialize);
 searchButton.addEventListener('click', fetchUserRoles);
 createForm.addEventListener('submit', handleCreate);
 updateForm.addEventListener('submit', handleUpdate);
-limitSelect.addEventListener('change', fetchUserRoles);
+limitInput.addEventListener('change', () => {
+    currentPage = 1;
+    fetchUserRoles();
+});
+
+document.querySelectorAll('th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+        const column = th.dataset.column;
+        if (sortColumn === column) {
+            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            sortColumn = column;
+            sortDirection = 'asc';
+        }
+        document.querySelectorAll('th.sortable').forEach(th => th.classList.remove('desc', 'asc'));
+        th.classList.add(sortDirection);
+        renderTable();
+    });
+});
 
 async function initialize() {
     await Promise.all([
@@ -63,12 +86,14 @@ async function fetchRoles() {
 async function fetchUserRoles() {
     try {
         const searchTerm = searchInput.value;
-        const limit = limitSelect.value;
-        const response = await fetch(`${API_BASE_URL}/usuario_rol?limit=${limit}&page=1&search=${searchTerm}`);
+        const limit = limitInput.value;
+        const response = await fetch(`${API_BASE_URL}/usuario_rol?limit=${limit}&page=${currentPage}&search=${searchTerm}`);
         const data = await response.json();
         if (data.status === 'success') {
             userRoles = data.data;
+            totalPages = data.totalPages;
             renderTable();
+            renderPagination();
         } else {
             console.error('Error al obtener usuario-roles:', data.message);
         }
@@ -99,8 +124,29 @@ function populateSelects() {
 }
 
 function renderTable() {
-    userRoleTableBody.innerHTML = '';
-    userRoles.forEach(userRole => {
+    userRoleTableBody.innerHTML = "";
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("rol_usuarios_create");
+    const canUpdate = privileges.includes("rol_usuarios_update");
+    const canDelete = privileges.includes("rol_usuarios_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
+    const sortedData = [...userRoles].sort((a, b) => {
+        if (sortColumn) {
+            const aValue = a[sortColumn];
+            const bValue = b[sortColumn];
+            if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
+            if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        }
+        return 0;
+    });
+
+    sortedData.forEach(userRole => {
         const user = users.find(u => u.usu_codigo === userRole.fk_usuario);
         const role = roles.find(r => r.rol_codigo === userRole.fk_rol);
         
@@ -110,14 +156,24 @@ function renderTable() {
             <td>${user ? user.usu_nombre : 'Usuario no encontrado'}</td>
             <td>${role ? role.rol_nombre : 'Rol no encontrado'}</td>
             <td>
-            <div class="d-flex gap-2">
-                <button class="btn btn-outline-primary update-btn" data-id="${userRole.usr_codigo}">
-                    <i class="bi bi-pencil"></i>
-                </button>
-                <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${userRole.usr_codigo}">
-                    <i class="bi bi-trash"></i>
-                </button>
-            </div>
+                <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
+                    <button class="btn btn-outline-primary update-btn" data-id="${userRole.usr_codigo}">
+                        <i class="bi bi-pencil"></i>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
+                    <button class="btn btn-outline-danger delete-btn" data-id="${userRole.usr_codigo}">
+                        <i class="bi bi-trash"></i>
+                    </button>`
+                        : ""
+                    }
+                </div>
             </td>
         `;
         userRoleTableBody.appendChild(row);
@@ -130,6 +186,24 @@ function renderTable() {
     document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', () => handleDelete(btn.dataset.id));
     });
+}
+
+function renderPagination() {
+    paginationContainer.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = document.createElement('li');
+        pageItem.classList.add('page-item');
+        if (i === currentPage) {
+            pageItem.classList.add('active');
+        }
+        pageItem.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        pageItem.addEventListener('click', (e) => {
+            e.preventDefault();
+            currentPage = i;
+            fetchUserRoles();
+        });
+        paginationContainer.appendChild(pageItem);
+    }
 }
 
 async function handleCreate(event) {

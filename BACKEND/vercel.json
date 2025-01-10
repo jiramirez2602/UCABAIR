@@ -7,9 +7,7 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/src/index.js" }
-  ],
+  "routes": [{ "src": "/(.*)", "dest": "/src/index.js" }],
   "env": {
     "DB_USER": "@DB_USER",
     "DB_PASSWORD": "@DB_PASSWORD",

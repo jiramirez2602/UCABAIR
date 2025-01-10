@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.21.3.final using JasperReports Library version 6.21.3-4a3078d20785ebe464f18037d738d12fc98c13cf  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Empleados_asignados_pruebaEnsamble" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a2c5258f-3afb-480f-812b-48aa9c144fca">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgresql"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="ireport.jasperserver.url" value="http://localhost:8080/jasperserver-pro/"/>
+	<property name="ireport.jasperserver.user" value="jasperadmin"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/Reportes_Entrega1/Empleados_asignados_pruebaEnsamble_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/Reportes_Entrega1/Empleados_asignados_pruebaEnsamble"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#00004D">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dsreporteAsignado" uuid="7df73373-fa67-4df4-806c-3beb0aa592ed">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<subDataset name="Dataset1" uuid="e3f640d7-7951-4331-9e8a-453579c1043a">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Postgresql"/>
+		<queryString language="SQL">
+			<![CDATA[select pn.per_nombre||' '||pn.pen_primer_apellido as "Nombre del empleado",'Avion '||a.avi_matricula||' modelo '||ma.moa_nombre as "Proyecto asignado",
+'Ensamble' as "Tipo de tarea"
+from persona_natural pn,
+     empleado e,
+     asignacion_empleado ae,
+     fase_ejecucion fe,
+     avion a,
+     modelo_avion ma 
+where 
+     pn.per_codigo=e.fk_persona_natural and 
+     e.emp_codigo=ae.fk_empleado and 
+     ae.fk_fase_ejecucion=fe.fae_codigo and 
+     fe.fk_avion=a.avi_codigo and 
+     a.fk_modelo_avion=ma.moa_codigo
+
+union all
+
+select pn.per_nombre||' '||pn.pen_primer_apellido as "Nombre del empleado",'Avion '||a.avi_matricula||' modelo '||ma.moa_nombre as "Proyecto asignado",
+'Prueba' as "Tipo de tarea"
+from persona_natural pn,
+     empleado e,
+     encargado_prueba ep,
+     proceso_prueba pp,
+     pieza p,
+     fase_ejecucion fe,
+     avion a,
+     modelo_avion ma 
+where 
+     pn.per_codigo=e.fk_persona_natural and 
+     e.emp_codigo=ep.fk_empleado and
+     ep.fk_proceso_prueba=pp.prp_codigo and 
+     pp.fk_prueba=p.pie_codigo and
+     p.fk_fase_ejecucion=fe.fae_codigo and 
+     fe.fk_avion=a.avi_codigo and 
+     a.fk_modelo_avion=ma.moa_codigo;]]>
+		</queryString>
+		<field name="Nombre del empleado" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="Nombre del empleado"/>
+			<property name="com.jaspersoft.studio.field.label" value="Nombre del empleado"/>
+		</field>
+		<field name="Proyecto asignado" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="Proyecto asignado"/>
+			<property name="com.jaspersoft.studio.field.label" value="Proyecto asignado"/>
+		</field>
+		<field name="Tipo de tarea" class="java.lang.String">
+			<property name="com.jaspersoft.studio.field.name" value="Tipo de tarea"/>
+			<property name="com.jaspersoft.studio.field.label" value="Tipo de tarea"/>
+		</field>
+	</subDataset>
+	<parameter name="ds" class="net.sf.jasperreports.engine.data.JRBeanArrayDataSource"/>
+	<queryString>
+		<![CDATA[Select 1 as prueba;]]>
+	</queryString>
+	<field name="prueba" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="prueba"/>
+		<property name="com.jaspersoft.studio.field.label" value="prueba"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<staticText>
+				<reportElement x="103" y="42" width="60" height="15" uuid="f5d96168-b42a-4513-865b-8906bf1ea77f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[UcabAir]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="42" width="98" height="15" uuid="4fdbdc65-91d5-4902-9570-846628bcb873">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[www.ucabair.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="299" y="42" width="100" height="15" uuid="a27d4119-ad13-46b0-b750-cb52b9976f8e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[+58 212-978-0139]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="9" width="410" height="25" uuid="b33f370a-7bf0-41aa-809c-eaaddadd23ac">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EMPLEADOS CON PROYECTOS ASIGNADOS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="173" y="42" width="1" height="15" forecolor="#00004D" uuid="a5db4000-8a4d-45f5-9193-2c17e6a930a4">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<line>
+				<reportElement x="-1" y="72" width="556" height="1" uuid="3ae766c6-e150-46ee-9edb-071d2d7e43dc">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</line>
+			<rectangle>
+				<reportElement x="290" y="42" width="1" height="15" forecolor="#00004D" uuid="d1e554f0-cb0e-4296-81e3-76485001d794">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+			</rectangle>
+			<image>
+				<reportElement x="470" y="0" width="60" height="56" uuid="f9cca17a-173c-43df-964f-28df28d69496"/>
+				<imageExpression><![CDATA["/Images/airplaneImage.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="60" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="555" height="60" uuid="1d6f87ee-91f4-4402-a59d-19193d9577c1">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Dataset1" uuid="2da4386f-c149-41cf-b811-98ab45b6a5f4">
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="120" uuid="51d1058b-3ca4-4395-9bd6-86a1c27ef853">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="120" height="30" forecolor="#FFFFFF" uuid="9e5a1ef5-7183-4467-8550-14054a9d1adc"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Nombre del empleado]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="120" height="30" uuid="c41df87f-1958-4056-b114-fbb8231549e5"/>
+								<box>
+									<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{Nombre del empleado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="320" uuid="833b5796-cc82-449d-ba7b-704b26013b8c">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="320" height="30" forecolor="#FFFFFF" uuid="42f08237-d9fd-479f-a8c1-2d10d9fb7b42"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Proyecto asignado]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="320" height="30" uuid="51b85cc6-bb83-4da9-8b78-e1bcd12c3618"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{Proyecto asignado}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="115" uuid="4921709e-e683-426d-9565-1aa194546909">
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="115" height="30" forecolor="#FFFFFF" uuid="77cf89ff-33f6-4b82-bd8a-5fd39f3a3c7b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font isBold="true"/>
+								</textElement>
+								<text><![CDATA[Tipo de tarea]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:detailCell style="Table_TD" height="30">
+							<textField>
+								<reportElement x="0" y="0" width="115" height="30" uuid="176a083d-1fb4-4df0-a299-c339cb433785"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{Tipo de tarea}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="68" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Opaque" x="0" y="20" width="555" height="30" forecolor="#FFFFFF" backcolor="#E6E8E9" uuid="63c57f57-96fe-4721-b3a2-f537bdd59dee">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="20" width="140" height="30" uuid="deacbcf3-61cf-42a7-8b6d-9584f019a479"/>
+				<textElement verticalAlignment="Middle" markup="styled">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha y hora de impresión:]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="140" y="20" width="100" height="30" uuid="21737e01-53ed-42ec-85b6-b137dd7908cc"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="226" y="20" width="100" height="30" uuid="945f99ef-1f2f-4ae7-a4f5-617673ec3dd3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="20" width="80" height="30" forecolor="#030200" uuid="d8a1c6ab-cf10-4fed-87e8-d336482e734c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="515" y="20" width="40" height="30" forecolor="#030200" uuid="a4450bc7-7680-408c-b5c8-708a74a8821a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

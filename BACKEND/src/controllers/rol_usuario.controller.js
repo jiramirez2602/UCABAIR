@@ -6,13 +6,27 @@ import {
   } from '../services/rol_usuario.service.js';
   
   export const getUsuarioRoles = async (req, res) => {
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const page = parseInt(req.query.page, 10) || 1;
     const search = req.query.search || '';
+    const limit = parseInt(req.query.limit, 10) || 10; // Valor predeterminado 10
+    const page = parseInt(req.query.page, 10) || 1; // Valor predeterminado 1
   
     try {
-      const response = await usuarioRol_SR(limit, page, search);
-      res.status(response.status === 'success' ? 200 : 500).json(response);
+      const allUsuarios = await usuarioRol_SR(search);
+      
+      // Paginar los resultados
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedUsuarios = allUsuarios.data.slice(startIndex, endIndex);
+  
+      const totalElements = allUsuarios.data.length; // Cantidad de elementos de la consulta
+      const totalPages = Math.ceil(totalElements / limit); // Número de páginas
+  
+      res.status(allUsuarios.status === 'success' ? 200 : 500).json({
+        ...allUsuarios,
+        data: paginatedUsuarios,
+        totalElements,
+        totalPages,
+      });
     } catch (err) {
       res.status(500).json({
         status: 'error',
@@ -22,6 +36,7 @@ import {
       });
     }
   };
+  
   
   export const createUsuarioRol = async (req, res) => {
     const { fk_usuario, fk_rol } = req.body;

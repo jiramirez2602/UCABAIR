@@ -46,6 +46,17 @@ async function fetchData() {
 
 function renderTable() {
     modelTableBody.innerHTML = '';
+
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+    const canCreate = privileges.includes("fase_configuracion_create");
+    const canUpdate = privileges.includes("fase_configuracion_update");
+    const canDelete = privileges.includes("fase_configuracion_delete");
+
+    if (!canCreate) {
+        createButton.style.display = "none";
+    }
+
     models.forEach(model => {
         const row = document.createElement('tr');
         row.innerHTML = `
@@ -56,14 +67,24 @@ function renderTable() {
             <td>${model.moa_nombre}</td>
             <td>${model.zon_nombre}</td>
             <td>
-<div class="d-flex gap-2">
-    <button class="btn btn-outline-primary update-btn" data-id="${model.fac_codigo}">
-        <i class="bi bi-pencil"></i>
-    </button>
-    <button class="btn btn-outline-danger delete-btn" data-id="${model.fac_codigo}">
-        <i class="bi bi-trash"></i>
-    </button>
-</div>
+                <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
+                    <button class="btn btn-outline-primary update-btn" data-id="${model.fac_codigo}">
+                        <i class="bi bi-pencil"></i>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
+                    <button class="btn btn-outline-danger delete-btn" data-id="${model.fac_codigo}">
+                        <i class="bi bi-trash"></i>
+                    </button>`
+                        : ""
+                    }
+                </div>
             </td>
         `;
         modelTableBody.appendChild(row);
@@ -77,6 +98,7 @@ function renderTable() {
         btn.addEventListener('click', () => handleDelete(btn.dataset.id));
     });
 }
+
 
 async function handleCreate(event) {
     event.preventDefault();

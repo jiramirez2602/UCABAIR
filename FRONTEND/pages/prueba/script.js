@@ -126,6 +126,16 @@ function renderTable() {
     return 0;
   });
 
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+  const privileges = currentUser.privileges.map((priv) => priv.pri_nombre);
+  const canCreate = privileges.includes("prueba_create");
+  const canUpdate = privileges.includes("prueba_update");
+  const canDelete = privileges.includes("prueba_delete");
+
+  if (!canCreate) {
+    createButton.style.display = "none";
+  }
+
   sortedTestTypes.forEach((testType) => {
     const row = document.createElement("tr");
     row.innerHTML = `
@@ -136,12 +146,22 @@ function renderTable() {
             <td>${testType.tip_nombre_tipo}</td>
             <td>
                 <div class="d-flex gap-2">
+                    ${
+                      canUpdate
+                        ? `
                     <button class="btn btn-outline-primary update-btn" data-id="${testType.pru_codigo}">
                         <i class="bi bi-pencil"></i>
-                    </button>
+                    </button>`
+                        : ""
+                    }
+                    ${
+                      canDelete
+                        ? `
                     <button class="btn btn-outline-danger delete-btn" data-id="${testType.pru_codigo}">
                         <i class="bi bi-trash"></i>
-                    </button>
+                    </button>`
+                        : ""
+                    }
                 </div>
             </td>
         `;
@@ -156,6 +176,7 @@ function renderTable() {
     btn.addEventListener("click", () => handleDelete(btn.dataset.id));
   });
 }
+
 
 // Add event listeners to sortable columns
 document.querySelectorAll('th.sortable').forEach(th => {

@@ -16,9 +16,3 @@ Jorge Ramírez, Angelo Di Martino y María Fernanda Bolívar
 #TODO:
 1. Mejorar notificaciones
 2. Agregar en empleado persona natural debería mostrar combo box modal update
-3. Pendiente: 
-- Gestión de Usuario-Roles 
-- Personas Naturales
-- Personas Jurídicas
-- Gestión de Roles y Privilegios
-4. Crear privilegios granulares
